@@ -124,3 +124,11 @@ _modules/*
 
 /results/
 /phpunit*.xml
+
+#-------------------------
+# Node.js
+#-------------------------
+node_modules/
+npm-debug.log
+yarn-error.log
+
