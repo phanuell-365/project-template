@@ -2,6 +2,9 @@
 
 namespace Config;
 
+use App\Filters\AuthFilter;
+use App\Filters\CorsFilter;
+use App\Filters\PermissionsFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -30,10 +33,13 @@ class Filters extends BaseFilters
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'cors'          => Cors::class,
+        //        'cors'          => Cors::class,
+        'cors'          => CorsFilter::class,
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'auth'          => AuthFilter::class,
+        'permissions'   => PermissionsFilter::class,
     ];
 
     /**
@@ -51,13 +57,18 @@ class Filters extends BaseFilters
      */
     public array $required = [
         'before' => [
-            'forcehttps', // Force Global Secure Requests
-            'pagecache',  // Web Page Caching
+            'forcehttps',
+            // Force Global Secure Requests
+            'pagecache',
+            // Web Page Caching
         ],
-        'after' => [
-            'pagecache',   // Web Page Caching
-            'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
+        'after'  => [
+            'pagecache',
+            // Web Page Caching
+            'performance',
+            // Performance Metrics
+            'toolbar',
+            // Debug Toolbar
         ],
     ];
 
@@ -72,11 +83,25 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            'cors',
+            'honeypot',
+            'csrf',
+            'invalidchars',
+            'auth' => [
+                'except' => [
+                    '([^/]+)/auth/*',
+                    'unauthorized',
+                ],
+            ],
+            'permissions' => [
+                'except' => [
+                    '([^/]+)/auth/*',
+                    'unauthorized',
+                ],
+            ],
         ],
-        'after' => [
+        'after'  => [
+            'cors',
             // 'honeypot',
             // 'secureheaders',
         ],

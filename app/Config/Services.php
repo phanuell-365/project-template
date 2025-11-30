@@ -2,6 +2,8 @@
 
 namespace Config;
 
+use App\Services\GroupsService;
+use App\Services\PermissionsService;
 use CodeIgniter\Config\BaseService;
 
 /**
@@ -29,4 +31,22 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+    public static function permissions_service($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('permissions_service');
+        }
+
+        return new PermissionsService();
+    }
+
+    public static function groups_service($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('groups_service');
+        }
+
+        return new GroupsService();
+    }
 }

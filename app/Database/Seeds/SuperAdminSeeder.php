@@ -15,7 +15,7 @@ class SuperAdminSeeder extends Seeder
             'identifier3'   => '0726943678',
             'secret'       => password_hash('SuperAdmin@123', PASSWORD_BCRYPT),
             'status'        => 1,
-            'organization_slug' => 'default-organization',
+            'organization_slug' => 'admin',
             'created_at'    => date('Y-m-d H:i:s'),
             'updated_at'    => date('Y-m-d H:i:s'),
         ];
@@ -27,7 +27,7 @@ class SuperAdminSeeder extends Seeder
 
         // Get organization ID
         $organization = $this->db->table('organizations')
-            ->where('slug', 'default-organization')
+            ->where('slug', 'admin')
             ->get()
             ->getRowArray();
 

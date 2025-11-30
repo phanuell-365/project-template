@@ -34,7 +34,7 @@ class SuperAdminGroupsSeeder extends Seeder
 
         // Before inserting, lookup the organization ID for 'default-organization'
         $organization = $this->db->table('organizations')
-            ->where('slug', 'default-organization')
+            ->where('slug', 'admin')
             ->get()
             ->getRowArray();
 

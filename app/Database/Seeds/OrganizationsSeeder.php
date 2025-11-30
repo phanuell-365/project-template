@@ -15,7 +15,7 @@ class OrganizationsSeeder extends Seeder
                 'address'       => '123 Main St, Anytown, USA',
                 'contact_email' => 'phanuell@mzawadi.com',
                 'contact_phone' => '+1234567890',
-                'slug'          => 'default-organization',
+                'slug'          => 'admin',
                 'package_id'    => null,
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s'),
