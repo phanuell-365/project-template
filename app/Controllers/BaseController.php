@@ -66,6 +66,8 @@ abstract class BaseController extends Controller
 
     protected PermissionsService | null $permissionsService;
 
+    protected string $org_slug = '';
+
     /**
      * @return void
      */
@@ -93,6 +95,14 @@ abstract class BaseController extends Controller
         $this->cache = Services::cache();
 
         $this->permissionsService = Services::permissions_service();
+
+        $this->org_slug = $this->request->getUri()->getSegment(1) ?? '';
+
+        $global_data = [
+            'org_slug' => $this->org_slug,
+        ];
+
+        Services::renderer()->setData($global_data);
     }
 
     /**
@@ -157,14 +167,10 @@ abstract class BaseController extends Controller
         return (bool)$org;
     }
 
-    protected function orgData(string | null $slug): array
+    protected function orgData(): array
     {
-        if (!$slug) {
-            throw new PageNotFoundException('Organization Not Found');
-        }
-
         $org = $this->db->table('organizations')
-            ->where('slug', $slug)
+            ->where('slug', $this->org_slug)
             ->get()
             ->getRowArray();
 

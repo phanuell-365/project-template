@@ -60,8 +60,9 @@ class Errors extends BaseController
         }
 
         if ($this->request->isAJAX()) {
-            $this->request->setHeader('Content-Type', 'application/json');
-            $this->request->setHeader('Accept', 'application/json');
+            $this->response->setHeader('Content-Type', 'application/json');
+            $this->response->setHeader('Accept', 'application/json');
+            $this->response->setStatusCode(404);
             return $this->respond([
                 'status' => 404,
                 'error'  => 'Page not found'
@@ -218,8 +219,9 @@ class Errors extends BaseController
         }
 
         if ($this->request->isAJAX()) {
-            $this->request->setHeader('Content-Type', 'application/json');
-            $this->request->setHeader('Accept', 'application/json');
+            $this->response->setHeader('Content-Type', 'application/json');
+            $this->response->setHeader('Accept', 'application/json');
+            $this->response->setStatusCode(404);
             return $this->respond([
                 'status' => 404,
                 'error'  => 'Page not found'

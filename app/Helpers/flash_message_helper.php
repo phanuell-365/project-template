@@ -22,15 +22,17 @@
  * @param boolean $auto_dismiss Whether the flash message should auto-dismiss after the duration. Default is true.
  * @param int $duration The duration in seconds for which the flash message should be displayed. Default is 5 seconds.
  */
-function flash_message(string $title = '', string $message = '', string $type = 'info', string $popup_style = 'banner', bool $auto_dismiss = false, int $duration = 5): void
+function flash_message(string $title = '', string $message = '', string $type = 'info', string $popup_style = 'banner', bool $auto_dismiss = null, int $duration = 5): void
 {
     $flash_data = [
-        'type'        => $type,
-        'popup_style' => $popup_style,
-        'title'       => $title,
-        'message'     => $message,
-        'duration'    => $duration,
-        'auto_dismiss'=> $auto_dismiss,
+        'type'         => $type,
+        'popup_style'  => $popup_style,
+        'title'        => $title,
+        'message'      => $message,
+        'duration'     => $duration,
+        //        'auto_dismiss'=> $auto_dismiss,
+        // check if auto_dismiss is null, if so check type, if type is 'error', set auto_dismiss to false, else true
+        'auto_dismiss' => $auto_dismiss ?? !($type === 'error'),
     ];
 
     session()->setFlashdata('flash_message', $flash_data);

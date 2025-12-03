@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class DashboardController extends BaseController
 {
-    public function index(string $org_slug): string
+    public function index(): string
     {
         // Render the dashboard view
         return view('pages/dashboard');

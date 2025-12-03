@@ -301,6 +301,18 @@ class PermissionsSeeder extends Seeder
                 'slug'        => 'system.package.delete',
                 'order'       => null,
             ],
+            // Action: Assign Permissions to Package (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Assign Permissions to Package',
+                'description' => 'Manage permissions assigned to packages',
+                'uri'         => '/system/package-settings/permissions',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'system.settings',
+                'icon'        => null,
+                'slug'        => 'system.package.permissions.assign',
+                'order'       => null,
+            ],
             // Child: Group Settings (Sidebar Link)
             [
                 'name'        => 'Group Settings',
@@ -347,6 +359,18 @@ class PermissionsSeeder extends Seeder
                 'parent_slug' => 'system.settings',
                 'icon'        => null,
                 'slug'        => 'system.group.delete',
+                'order'       => null,
+            ],
+            // Action: Assign Permissions to Group Template (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Assign Permissions to Group Template',
+                'description' => 'Manage permissions assigned to group templates',
+                'uri'         => '/system/group-settings/permissions',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'system.settings',
+                'icon'        => null,
+                'slug'        => 'system.group.permissions.assign',
                 'order'       => null,
             ],
             // ============================================================

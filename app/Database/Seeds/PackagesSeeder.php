@@ -52,7 +52,7 @@ class PackagesSeeder extends Seeder
         // Clear existing packages to avoid duplicates
 
         $this->db->table('packages')
-            ->emptyTable();
+            ->truncate();
 
         // Insert the package data
         $this->db->table('packages')

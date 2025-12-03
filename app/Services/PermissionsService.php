@@ -84,6 +84,10 @@ class PermissionsService extends BaseService
 
         foreach ($permissions as $permission) {
             if ($permission['uri'] === $route) {
+
+                // set the current permission in session for later use
+                session()->set('current_permission', $permission);
+
                 return true;
             }
         }

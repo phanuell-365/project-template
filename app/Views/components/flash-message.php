@@ -126,29 +126,28 @@ if ($flash_data) :
         <?php if ($popup_style === 'modal') : ?>
 
         //import {ShowNotification} from '<?php //= base_url('js/new.swal.js') ?>//';
-        import Swal from "<?= base_url('js/sweetalert2.esm.min.js') ?>"
 
-        async function ShowNotification(options) {
-            return Swal.fire({
-                ...options,
-                customClass: {
-                    popup: 'relative mx-auto flex flex-col w-11/12 sm:w-[480px] h-auto bg-soko-100 rounded-[28px]',
-                    htmlContainer: '!flex flex-col gap-4 justify-start !px-8 !pt-8 !pb-0 !text-sm tracking-[0.25px] leading-5 !text-start',
-                    title: 'text-title-lg text-gray-900 !text-start !px-8',
-                    confirmButton: 'btn btn-primary relative flex flex-row items-center justify-center gap-x-2 py-2.5 px-6 rounded-[6.25rem] text-sm tracking-[.00714em] font-medium hover:bg-primary-dark focus:bg-primary-dark',
-                    cancelButton: 'btn btn-secondary relative flex flex-row items-center justify-center gap-x-2 py-2.5 px-6 rounded-[6.25rem] text-sm tracking-[.00714em] font-medium hover:bg-secondary-dark focus:bg-secondary-dark',
-                    actions: 'flex flex-row justify-end gap-2 px-8 py-8 w-full',
-                    ...options.customClass,
-                },
-                buttonsStyling: false, // Disable default styling
-                backdrop: 'backdrop-blur bg-opacity-90',
-                // width
-                allowOutsideClick: true,
-                allowEscapeKey: false,
-                focusConfirm: true,
-                reverseButtons: true,
-            });
-        }
+        // async function ShowNotification(options) {
+        //     return Swal.fire({
+        //         ...options,
+        //         customClass: {
+        //             popup: 'relative mx-auto flex flex-col w-11/12 sm:w-[480px] h-auto bg-soko-100 rounded-[28px]',
+        //             htmlContainer: '!flex flex-col gap-4 justify-start !px-8 !pt-8 !pb-0 !text-sm tracking-[0.25px] leading-5 !text-start',
+        //             title: 'text-title-lg text-gray-900 !text-start !px-8',
+        //             confirmButton: 'btn btn-primary relative flex flex-row items-center justify-center gap-x-2 py-2.5 px-6 rounded-[6.25rem] text-sm tracking-[.00714em] font-medium hover:bg-primary-dark focus:bg-primary-dark',
+        //             cancelButton: 'btn btn-secondary relative flex flex-row items-center justify-center gap-x-2 py-2.5 px-6 rounded-[6.25rem] text-sm tracking-[.00714em] font-medium hover:bg-secondary-dark focus:bg-secondary-dark',
+        //             actions: 'flex flex-row justify-end gap-2 px-8 py-8 w-full',
+        //             ...options.customClass,
+        //         },
+        //         buttonsStyling: false, // Disable default styling
+        //         backdrop: 'backdrop-blur bg-opacity-90',
+        //         // width
+        //         allowOutsideClick: true,
+        //         allowEscapeKey: false,
+        //         focusConfirm: true,
+        //         reverseButtons: true,
+        //     });
+        // }
 
         // Swal.fire({
         ShowNotification({

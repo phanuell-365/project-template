@@ -9,29 +9,30 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->group('(:segment)', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('auth', ['namespace' => 'App\Controllers'], function ($routes) {
-        $routes->get('login', 'AuthController::loginView/$1', ['as' => 'login-view']);
-        $routes->post('login', 'AuthController::login/$1', ['as' => 'login']);
-        $routes->get('logout', 'AuthController::logout/$1', ['as' => 'logout']);
-        $routes->get('forgot-password', 'AuthController::forgotPasswordView/$1', ['as' => 'forgot-password-view']);
-        $routes->post('forgot-password', 'AuthController::forgotPassword/$1', ['as' => 'forgot-password']);
-        $routes->get('reset-password', 'AuthController::resetPasswordView/$1', ['as' => 'reset-password-view']);
-        $routes->post('reset-password', 'AuthController::resetPassword/$1', ['as' => 'reset-password']);
+        $routes->get('login', 'AuthController::loginView', ['as' => 'login-view']);
+        $routes->post('login', 'AuthController::login', ['as' => 'login']);
+        $routes->get('logout', 'AuthController::logout', ['as' => 'logout']);
+        $routes->get('forgot-password', 'AuthController::forgotPasswordView', ['as' => 'forgot-password-view']);
+        $routes->post('forgot-password', 'AuthController::forgotPassword', ['as' => 'forgot-password']);
+        $routes->get('reset-password', 'AuthController::resetPasswordView', ['as' => 'reset-password-view']);
+        $routes->post('reset-password', 'AuthController::resetPassword', ['as' => 'reset-password']);
     });
 
-    $routes->get('dashboard', 'DashboardController::index/$1', ['as' => 'dashboard']);
+    $routes->get('dashboard', 'DashboardController::index', ['as' => 'dashboard']);
 
     $routes->group('users', ['namespace' => 'App\Controllers'], function ($routes) {
-        $routes->get('create', 'UserController::createUserView/$1', ['as' => 'create-user-view']);
-        $routes->post('create', 'UserController::createUser/$1', ['as' => 'create-user']);
-        $routes->get('profile', 'UserController::profileView/$1', ['as' => 'user-profile-view']);
-        $routes->post('profile', 'UserController::updateProfile/$1', ['as' => 'update-user-profile']);
-        $routes->post('change-password', 'UserController::changePassword/$1', ['as' => 'change-user-password']);
+        $routes->get('create', 'UserController::createUserView', ['as' => 'create-user-view']);
+        $routes->post('create', 'UserController::createUser', ['as' => 'create-user']);
+        $routes->get('profile', 'UserController::profileView', ['as' => 'user-profile-view']);
+        $routes->post('profile', 'UserController::updateProfile', ['as' => 'update-user-profile']);
+        $routes->post('change-password', 'UserController::changePassword', ['as' => 'change-user-password']);
     });
 
     $routes->group('system', ['namespace' => 'App\Controllers'], function ($routes) {
         $routes->group('package-settings', ['namespace' => 'App\Controllers'], function ($routes) {
-            $routes->get('/', 'PackageSettingsController::index/$1', ['as' => 'package-settings']);
-            $routes->post('update', 'PackageSettingsController::update/$1', ['as' => 'update-package-settings']);
+            $routes->get('/', 'PackageSettingsController::index', ['as' => 'package-settings']);
+            $routes->post('create', 'PackageSettingsController::create', ['as' => 'create-package-settings']);
+            $routes->put('edit', 'PackageSettingsController::edit', ['as' => 'edit-package-settings']);
         });
     });
 });

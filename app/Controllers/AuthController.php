@@ -7,16 +7,15 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class AuthController extends BaseController
 {
-    public function loginView(string $org_slug): string
+    public function loginView(): string
     {
-//        $this->orgExists($org_slug);
-        $org_data = $this->orgData($org_slug);
+        $org_data = $this->orgData();
 
         $org_name = $org_data['name'] ?? 'Organization';
 
         log_message('debug', '[DEBUG] {org_slug}', [
             'org_slug' => json_encode([
-                'data'    => $org_slug,
+                'data'    => $this->org_slug,
                 'message' => 'this is it'
             ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)
         ]);
@@ -24,12 +23,12 @@ class AuthController extends BaseController
         // testing the flash_message helper
 //        flash_message('Welcome to the login page!', 'You can login using your credentials.', 'success', 'banner', true, 10);
 
-        $this->log_audit('Viewed login page for organization: ' . $org_slug, true, ['org_slug' => $org_slug]);
+        $this->log_audit('Viewed login page for organization: ' . $this->org_slug, true, ['org_slug' => $this->org_slug]);
 
-        return view('pages/auth/login', compact('org_slug', 'org_name'));
+        return view('pages/auth/login', compact('org_name'));
     }
 
-    public function login(string $org_slug): ResponseInterface
+    public function login(): ResponseInterface
     {
         // Handle login logic here (authentication, validation, etc.)
 
@@ -49,15 +48,14 @@ class AuthController extends BaseController
 //                'data'   => json_encode($data, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)
             ]);
 
-            $this->log_audit('Failed login attempt for organization: ' . $org_slug, false, [
-                'org_slug' => $org_slug,
+            $this->log_audit('Failed login attempt for organization: ' . $this->org_slug, false, [
+                'org_slug' => $this->org_slug,
                 'errors'   => $this->validator->getErrors()
             ]);
 
             flash_message('Login Failed', 'Please correct the errors and try again.', 'error');
 
             return redirect()
-//                ->to(route_to('login-view', $org_slug))
                 ->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
@@ -89,7 +87,7 @@ class AuthController extends BaseController
                 WHERE users.identifier3 = ?
                   AND organizations.slug = ?
             ";
-            $user = $this->db->query($query, [$data['phone'], $org_slug])->getRowArray();
+            $user = $this->db->query($query, [$data['phone'], $this->org_slug])->getRowArray();
         } else {
 //            $user = $this->db->table('users')
 //                ->where('identifier2', $data['email'])
@@ -109,7 +107,7 @@ class AuthController extends BaseController
                 WHERE users.identifier2 = ?
                   AND organizations.slug = ?
             ";
-            $user = $this->db->query($query, [$data['email'], $org_slug])->getRowArray();
+            $user = $this->db->query($query, [$data['email'], $this->org_slug])->getRowArray();
         }
 
         // log the last query for debugging
@@ -118,8 +116,8 @@ class AuthController extends BaseController
 //        ]);
 
         if (!$user || !password_verify($data['password'], $user['secret'])) {
-            $this->log_audit('Failed login attempt for organization: ' . $org_slug, false, [
-                'org_slug' => $org_slug,
+            $this->log_audit('Failed login attempt for organization: ' . $this->org_slug, false, [
+                'org_slug' => $this->org_slug,
                 'reason'   => 'Invalid credentials'
             ]);
 
@@ -131,11 +129,11 @@ class AuthController extends BaseController
                 ->withInput();
         }
 
-        $org_data = $this->orgData($org_slug);
+        $org_data = $this->orgData();
 
         // Set session data, etc. here as needed
         session()->set('isLoggedIn', true);
-        session()->set('org_slug', $org_slug);
+        session()->set('org_slug', $this->org_slug);
         session()->set('org_name', $org_data['name'] ?? 'Organization');
         session()->set('user_id', $user['id']);
         session()->set('org_id', $org_data['id']);
@@ -159,36 +157,35 @@ class AuthController extends BaseController
             'org_id'    => $org_data['id'],
         ]);
 
-        $this->log_audit('Successful login for organization: ' . $org_slug, true, ['org_slug' => $org_slug]);
+        $this->log_audit('Successful login for organization: ' . $this->org_slug, true, ['org_slug' => $this->org_slug]);
 
         // Set a success flash message
         flash_message('Login Successful', 'Welcome back!', 'success', 'banner', true);
 
-        return redirect()->to(route_to('dashboard', $org_slug));
+        return redirect()->to(route_to('dashboard', $this->org_slug));
     }
 
-    public function forgotPasswordView(string $org_slug)
+    public function forgotPasswordView()
     {
-        $org_data = $this->orgData($org_slug);
+        $org_data = $this->orgData();
 
         $org_name = $org_data['name'] ?? 'Organization';
 
-        $this->log_audit('Viewed forgot password page for organization: ' . $org_slug, true, ['org_slug' => $org_slug]);
+        $this->log_audit('Viewed forgot password page for organization: ' . $this->org_slug, true, ['org_slug' => $this->org_slug]);
 
-        return view('pages/auth/forgot_password', compact('org_slug', 'org_name'));
+        return view('pages/auth/forgot_password', compact( 'org_name'));
     }
 
-    public function logout($org_slug): ResponseInterface
+    public function logout(): ResponseInterface
     {
-//        $org_slug = session()->get('org_slug');
         session()->set('user_id', null);
 
-        $this->log_audit('User logged out from organization: ' . $org_slug, true, ['org_slug' => $org_slug]);
+        $this->log_audit('User logged out from organization: ' . $this->org_slug, true, ['org_slug' => $this->org_slug]);
 
         session()->destroy();
 
         flash_message('Logged Out', 'You have been successfully logged out.', 'success', 'banner', true);
 
-        return redirect()->to(route_to('login-view', $org_slug));
+        return redirect()->to(route_to('login-view', $this->org_slug));
     }
 }
