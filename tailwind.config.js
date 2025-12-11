@@ -16,7 +16,7 @@ module.exports = {
                 //     '200': '#9fd8e1',
                 //     '300': '#7ecbd7',
                 //     '400': '#5dbece',
-                //     '500': '#59baca',
+                //     '500': '#59baca', // primary
                 //     '600': '#4fa9b8',
                 //     '700': '#4498a6',
                 //     '800': '#398794',
@@ -43,7 +43,7 @@ module.exports = {
                     '300': '#ff949f',
                     '400': '#ff5768',
                     '500': '#ff2339',
-                    '600': '#ff001a',
+                    '600': '#ff001a', // primary
                     '700': '#d70016',
                     '800': '#b10315',
                     '900': '#920a18',
@@ -59,7 +59,7 @@ module.exports = {
                 //     '600': '#f500ff',
                 //     '700': '#d100d9',
                 //     '800': '#ad00b1',
-                //     '900': '#800080',
+                //     '900': '#800080', // primary
                 //     '950': '#620063',
                 // },
             },
@@ -69,6 +69,7 @@ module.exports = {
                 montserrat: ['Montserrat', 'Ubuntu', 'sans-serif'],
             },
             fontSize: {
+                'xxxs': '.5rem',
                 'xxs': '.65rem',
                 'xs': '.75rem',
                 'sm': '.875rem',
@@ -86,7 +87,10 @@ module.exports = {
         themes: [
             {
                 'soko': {
-                    'primary': '#87e516',
+                    // 'primary': '#87e516',
+                    // 'primary': '#59baca',
+                    'primary': '#ff001a',
+                    // 'primary': '#800080',
                     "secondary": "#F000B8",
                     "accent": "#37CDBE",
                     "neutral": "#3D4451",

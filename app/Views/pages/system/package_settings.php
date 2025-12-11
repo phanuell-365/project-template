@@ -267,15 +267,10 @@ $form_textarea_controls = [
                                 </div>
                             </div>
                             <div class="p-4 bg-gray-50">
-                                <button class="w-full flex items-center justify-center gap-2 py-2 text-soko-600 hover:text-soko-700 font-medium">
+                                <button
+                                        class="manage-permissions-btn w-full flex items-center justify-center gap-2 py-2 text-soko-600 hover:text-soko-700 font-medium"
+                                        data-package-id="<?= $package['id'] ?>">
                                     Manage Permissions
-                                    <!--                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"-->
-                                    <!--                                         fill="none"-->
-                                    <!--                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"-->
-                                    <!--                                         stroke-linejoin="round"-->
-                                    <!--                                         class="lucide lucide-chevron-right">-->
-                                    <!--                                        <path d="m9 18 6-6-6-6"></path>-->
-                                    <!--                                    </svg>-->
                                     <span class="material-symbols-rounded">
                                         arrow_forward_ios
                                     </span>
@@ -313,6 +308,16 @@ $this->section('bottom-scripts');
         // we'll be using jQuery for our implementations
 
         $(document).ready(function () {
+            // handle the manage permission button click
+            $('.manage-permissions-btn').on('click', function () {
+                // Redirect to the manage permissions page (you need to create this route)
+                // Extract the package ID from the data attribute
+                const packageId = $(this).data('package-id');
+                // Redirect to the manage permissions page for the specific package
+                window.location.href =
+                    `<?= base_url(route_to('update-package-permissions', esc($org_slug))) ?>?package_id=${packageId}`;
+            });
+
             const editButtons = $('button[aria-label="Edit Package Settings"]');
             // Handle Edit Package button click
             editButtons.on('click', async function () {

@@ -33,6 +33,8 @@ $routes->group('(:segment)', ['namespace' => 'App\Controllers'], function ($rout
             $routes->get('/', 'PackageSettingsController::index', ['as' => 'package-settings']);
             $routes->post('create', 'PackageSettingsController::create', ['as' => 'create-package-settings']);
             $routes->put('edit', 'PackageSettingsController::edit', ['as' => 'edit-package-settings']);
+            $routes->post('permissions', 'PackageSettingsController::updatePermissions', ['as' => 'update-package-permissions']);
+            $routes->get('permissions', 'PackageSettingsController::getPermissions', ['as' => 'get-package-permissions']);
         });
     });
 });

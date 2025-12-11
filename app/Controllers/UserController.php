@@ -14,6 +14,6 @@ class UserController extends BaseController
 
     public function createUserView(): string
     {
-        return view('pages/users/create_user', ['org_slug' => $org_slug]);
+        return view('pages/users/create_user');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 $sidebar_tree = session()->get("sidebar_tree");
+//dd($sidebar_tree);
 
 function buildChildMenu($children, $level = 1): string
 {
@@ -392,6 +393,7 @@ if (!empty($sidebar_tree)) {
 
         // Highlight active menu item based on current URL
         const currentPath = window.location.pathname;
+
         $('.sidebar a').each(function () {
             const linkPath = new URL($(this).attr('href'), window.location.origin).pathname;
 

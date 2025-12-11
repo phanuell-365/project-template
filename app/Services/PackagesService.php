@@ -42,7 +42,7 @@ class PackagesService extends BaseService
 //        $this->db->table('packages')->insert($data);
         // format data for insert
 
-       // features field was string with comma separated values, convert to json
+        // features field was string with comma separated values, convert to json
         $features = explode(',', $data['features'] ?? '');
         $data['features'] = json_encode($features);
 
@@ -71,7 +71,8 @@ class PackagesService extends BaseService
             'updated_at' => date('Y-m-d H:i:s'),
         ];
 
-        $this->db->table('packages')->insert($insertData);
+        $this->db->table('packages')
+            ->insert($insertData);
 
 //        return $this->db->insertID();
         return [
@@ -110,7 +111,7 @@ class PackagesService extends BaseService
             $package['organization_count'] = $usageResult['organization_count'] ?? 0;
 
             // Decode features from JSON to array
-            $package['features'] = json_decode($package['features'], true) ?: [];
+            $package['features'] = json_decode($package['features'], true) ? : [];
 
             // Get number of permissions associated with this package
             $permissionsQuery = $this->db->query("
@@ -154,5 +155,26 @@ class PackagesService extends BaseService
             'success' => true,
             'message' => 'Package updated successfully.',
         ];
+    }
+
+    public function deletePackage(int $packageId): array
+    {
+        $data = [
+            'deleted_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $this->db->table('packages')
+            ->where('id', $packageId)
+            ->update($data);
+
+        return [
+            'success' => true,
+            'message' => 'Package deleted successfully.',
+        ];
+    }
+
+    public function __destruct()
+    {
+        $this->db->close();
     }
 }

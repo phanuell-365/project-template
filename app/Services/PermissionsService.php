@@ -20,6 +20,36 @@ class PermissionsService extends BaseService
         $this->cache = Services::cache();
     }
 
+    public function canAccessRoute(int $userId, int $orgId, string $route): bool
+    {
+        $permissions = $this->getUserPermissions($userId, $orgId);
+
+        // log permissions for debugging
+
+//        log_message('debug', 'User Permissions {permissions}', [
+//            'permissions' => print_r($permissions, true)
+//        ]);
+
+        // log user id
+        log_message('debug', 'Checking route access for user ID: {userId}, org ID: {orgId}, route: {route}', [
+            'userId' => $userId,
+            'orgId'  => $orgId,
+            'route'  => $route
+        ]);
+
+        foreach ($permissions as $permission) {
+            if ($permission['uri'] === $route) {
+
+                // set the current permission in session for later use
+                session()->set('current_permission', $permission);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getUserPermissions(int $userId, int $orgId): array
     {
         $cacheKey = "user_permissions_{$userId}_{$orgId}";
@@ -57,42 +87,6 @@ class PermissionsService extends BaseService
         }
 
         return $permissions;
-    }
-
-    public function clearUserPermissionsCache(int $userId, int $orgId): void
-    {
-        $cacheKey = "user_permissions_{$userId}_{$orgId}";
-        $this->cache->delete($cacheKey);
-    }
-
-    public function canAccessRoute(int $userId, int $orgId, string $route): bool
-    {
-        $permissions = $this->getUserPermissions($userId, $orgId);
-
-        // log permissions for debugging
-
-//        log_message('debug', 'User Permissions {permissions}', [
-//            'permissions' => print_r($permissions, true)
-//        ]);
-
-        // log user id
-        log_message('debug', 'Checking route access for user ID: {userId}, org ID: {orgId}, route: {route}', [
-            'userId' => $userId,
-            'orgId'  => $orgId,
-            'route'  => $route
-        ]);
-
-        foreach ($permissions as $permission) {
-            if ($permission['uri'] === $route) {
-
-                // set the current permission in session for later use
-                session()->set('current_permission', $permission);
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public function buildSidebarTree(array $permissions): array
@@ -167,5 +161,152 @@ class PermissionsService extends BaseService
         ]);
 
         return $tree;
+    }
+
+    public function getPackagePermissions($package_id)
+    {
+        $sql = "
+            SELECT p.id permission_id, p.name, p.slug, p.description
+            FROM permissions p
+            INNER JOIN package_permissions pp ON p.id = pp.permission_id
+            WHERE pp.package_id = :package_id:
+              AND p.deleted_at IS NULL
+              AND pp.deleted_at IS NULL
+        ";
+
+        $query = $this->db->query($sql, [
+            'package_id' => $package_id,
+        ]);
+
+        // Log the last query for debugging
+        log_message('debug', 'Last Query: {query}', [
+            'query' => $this->db->getLastQuery()
+        ]);
+
+        return $query->getResultArray();
+    }
+
+    public function listAllPermissions()
+    {
+        $sql = "
+            SELECT p.id AS permission_id, p.name, p.description, p.uri, p.is_parent, p.parent_id, p.icon, p.order, p.slug, p.context
+            FROM permissions p
+            WHERE p.deleted_at IS NULL
+            ORDER BY p.order ASC
+        ";
+
+        $query = $this->db->query($sql);
+
+        return $query->getResultArray();
+    }
+
+    public function getPermissionsHierarchy(): array
+    {
+        // Fetch the parents
+        $sqlParents = "
+            SELECT id AS permission_id, name, description, uri, is_parent, parent_id, icon, `order`, slug, context
+            FROM permissions
+            WHERE is_parent = 1
+              AND deleted_at IS NULL
+            ORDER BY `order` ASC
+        ";
+
+        $queryParents = $this->db->query($sqlParents);
+
+        $parents = $queryParents->getResultArray();
+
+        // For each parent, fetch its children
+        foreach ($parents as &$parent) {
+            $sqlChildren = "
+                SELECT id AS permission_id, name, description, uri, is_parent, parent_id, icon, `order`, slug, context
+                FROM permissions
+                WHERE parent_id = :parent_id:
+                  AND deleted_at IS NULL
+                ORDER BY `order` ASC
+            ";
+            $queryChildren = $this->db->query($sqlChildren, [
+                'parent_id' => $parent['permission_id'],
+            ]);
+            $children = $queryChildren->getResultArray();
+            $parent['children'] = $children;
+        }
+
+        return $parents;
+    }
+
+    public function updatePackagePermissions(int $packageId, array $permissionIds): void
+    {
+        // Strategy: Use a transaction to ensure data integrity
+        // Secondly, delete existing permissions for the package
+        // We also need to cascade this to the organizations that have this package
+        $this->db->transException(true)
+            ->transStart();
+
+        // Delete existing permissions
+        $deleteSql = "
+            DELETE FROM package_permissions
+            WHERE package_id = :package_id:
+        ";
+
+        $this->db->query($deleteSql, [
+            'package_id' => $packageId,
+        ]);
+
+        // Insert new permissions
+        $insertSql = "
+            INSERT INTO package_permissions (package_id, permission_id, created_at, updated_at)
+            VALUES (:package_id:, :permission_id:, NOW(), NOW())
+        ";
+
+        foreach ($permissionIds as $permissionId) {
+            $this->db->query($insertSql, [
+                'package_id'    => $packageId,
+                'permission_id' => $permissionId,
+            ]);
+        }
+
+        // Clean up user permissions cache for all users in organizations with this package
+        $orgSql = "
+            SELECT id AS organization_id
+            FROM organizations
+            WHERE package_id = :package_id:
+        ";
+
+        $orgQuery = $this->db->query($orgSql, [
+            'package_id' => $packageId,
+        ]);
+
+        $organizations = $orgQuery->getResultArray();
+
+        foreach ($organizations as $org) {
+            $userSql = "
+                SELECT DISTINCT ug.user_id AS user_id
+                FROM user_groups ug
+                INNER JOIN group_permissions gp ON ug.group_id = gp.group_id
+                INNER JOIN package_permissions pp ON gp.permission_id = pp.permission_id
+                WHERE pp.package_id = :package_id:
+                  AND ug.deleted_at IS NULL
+                  AND gp.deleted_at IS NULL
+                  AND pp.deleted_at IS NULL
+            ";
+
+            $userQuery = $this->db->query($userSql, [
+                'package_id' => $packageId,
+            ]);
+
+            $users = $userQuery->getResultArray();
+
+            foreach ($users as $user) {
+                $this->clearUserPermissionsCache($user['user_id'], $org['organization_id']);
+            }
+        }
+
+        $this->db->transComplete();
+    }
+
+    public function clearUserPermissionsCache(int $userId, int $orgId): void
+    {
+        $cacheKey = "user_permissions_{$userId}_{$orgId}";
+        $this->cache->delete($cacheKey);
     }
 }

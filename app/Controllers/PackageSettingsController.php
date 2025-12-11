@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Services\PackagesService;
+use App\Services\PermissionsService;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
 use Exception;
@@ -209,6 +210,145 @@ class PackageSettingsController extends BaseController
                     'status'  => 'error',
                     'message' => 'An unexpected error occurred. Please try again later.',
                 ]);
+        }
+    }
+
+    public function getPermissions(): string | ResponseInterface
+    {
+        try {
+            // Validate the package id
+            $rules = [
+                'package_id' => 'required|integer|is_not_unique[packages.id]',
+            ];
+
+            if (!$this->validate($rules)) {
+                log_message('error', '[ERROR] Validation Errors: {errors}', [
+                    'errors' => json_encode($this->validator->getErrors(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
+                ]);
+
+                $this->log_audit('Failed to get package permissions', false, [
+                    'errors' => $this->validator->getErrors()
+                ]);
+
+                flash_message('Retrieval Failed', 'Please provide a valid package ID.', 'error');
+
+                return redirect()
+                    ->back()
+                    ->withInput();
+            }
+
+            $data = $this->validator->getValidated();
+
+            $packageId = $data['package_id'];
+
+            // Fetch permissions using the PackagesService
+            // The view sent back should consist of all permissions against the permissions available for that package
+
+            $package_permissions = $this->permissionsService->getPackagePermissions($packageId);
+            $all_permissions = $this->permissionsService->getPermissionsHierarchy();
+
+            return view('pages/system/package_permissions', compact('package_permissions', 'all_permissions', 'packageId'));
+        } catch (Exception $e) {
+            log_message('error', '[ERROR] Exception while getting permissions: {message}', [
+                'message' => $e->getMessage(),
+                'stack'   => json_encode($e->getTrace(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
+            ]);
+
+//            return $this->response
+//                ->setStatusCode(500)
+//                ->setJSON([
+//                    'status'  => 'error',
+//                    'message' => 'An unexpected error occurred. Please try again later.',
+//                ]);
+
+            flash_message('Retrieval Failed', 'An unexpected error occurred. Please try again later.', 'error');
+
+            $this->log_audit('Exception occurred while getting package permissions', false, [
+                'exception_message' => $e->getMessage()
+            ]);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'An unexpected error occurred. Please try again later.');
+        }
+    }
+
+    public function updatePermissions(): ResponseInterface
+    {
+        try {
+            // Get the package id from the query parameters
+
+            $rules = [
+                'package_id'   => 'required|integer|is_not_unique[packages.id]',
+                'permissions.*'=> 'integer|is_not_unique[permissions.id]',
+            ];
+
+            if (!$this->validate($rules)) {
+                log_message('error', '[ERROR] Validation Errors: {errors}', [
+                    'errors' => json_encode($this->validator->getErrors(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR),
+                ]);
+
+                $this->log_audit('Failed to update package permissions', false, [
+                    'errors' => $this->validator->getErrors()
+                ]);
+
+//                return $this->response
+//                    ->setStatusCode(422)
+//                    ->setJSON([
+//                        'status'  => 'error',
+//                        'message' => 'Validation failed. Please correct the errors and try again.',
+//                        'errors'  => $this->validator->getErrors(),
+//                    ]);
+
+                flash_message('Update Failed', 'Please correct the errors and try again.', 'error');
+
+                return redirect()
+                    ->back()
+                    ->withInput();
+            }
+
+            $validatedData = $this->validator->getValidated();
+
+            $packageId = $validatedData['package_id'];
+            $permissions = $this->request->getPost('permissions') ?? [];
+
+            $this->permissionsService->updatePackagePermissions($packageId, $permissions);
+
+            $this->log_audit('Updated package permissions successfully', true, [
+                'package_id' => $packageId,
+                'permissions_updated_count' => count($permissions),
+            ]);
+
+            flash_message('Permissions Updated', 'The package permissions have been updated successfully.', 'success');
+
+            return redirect()
+                ->to(route_to('package-settings', $this->org_slug))
+                ->with('success', json_encode([
+                    'status'     => 'success',
+                    'package_id' => $packageId,
+                ]));
+        } catch (Exception $e) {
+            log_message('error', '[ERROR] Exception while updating permissions: {message}', [
+                'message' => $e->getMessage(),
+                'stack'   => $e->getTraceAsString(),
+            ]);
+
+            $this->log_audit('Exception occurred while updating package permissions', false, [
+                'exception_message' => $e->getMessage()
+            ]);
+
+            flash_message('Update Failed', 'An unexpected error occurred. Please try again later.', 'error');
+
+//            return $this->response
+//                ->setStatusCode(500)
+//                ->setJSON([
+//                    'status'  => 'error',
+//                    'message' => 'An unexpected error occurred. Please try again later.',
+//                ]);
+            return redirect()
+                ->back()
+                ->withInput();
         }
     }
 }
