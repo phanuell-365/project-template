@@ -35,6 +35,21 @@ $routes->group('(:segment)', ['namespace' => 'App\Controllers'], function ($rout
             $routes->put('edit', 'PackageSettingsController::edit', ['as' => 'edit-package-settings']);
             $routes->post('permissions', 'PackageSettingsController::updatePermissions', ['as' => 'update-package-permissions']);
             $routes->get('permissions', 'PackageSettingsController::getPermissions', ['as' => 'get-package-permissions']);
+            $routes->delete('delete', 'PackageSettingsController::delete', ['as' => 'delete-package-settings']);
+            $routes->group('group-templates', ['namespace' => 'App\Controllers'], function ($routes) {
+                $routes->get('create', 'PackageSettingsController::getPackageGroupTemplates', ['as' => 'get-package-group-templates']);
+                $routes->post('create', 'PackageSettingsController::savePackageGroupTemplate', ['as' => 'create-package-group-template']);
+                $routes->put('edit', 'PackageSettingsController::editPackageGroupTemplate', ['as' => 'edit-package-group-template']);
+                $routes->delete('delete', 'PackageSettingsController::deletePackageGroupTemplate', ['as' => 'delete-package-group-template']);
+            });
+        });
+
+        $routes->group('groups-settings', ['namespace' => 'App\Controllers'], function ($routes) {
+            $routes->get('/', 'GroupsSettingsController::index', ['as' => 'groups-settings']);
+            $routes->post('create', 'GroupsSettingsController::create', ['as' => 'create-group-settings']);
+            $routes->put('edit', 'GroupsSettingsController::edit', ['as' => 'edit-group-settings']);
+            $routes->post('permissions', 'GroupsSettingsController::updatePermissions', ['as' => 'update-group-permissions']);
+            $routes->get('permissions', 'GroupsSettingsController::getPermissions', ['as' => 'get-group-permissions']);
         });
     });
 });

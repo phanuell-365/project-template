@@ -179,9 +179,9 @@ class PermissionsService extends BaseService
         ]);
 
         // Log the last query for debugging
-        log_message('debug', 'Last Query: {query}', [
-            'query' => $this->db->getLastQuery()
-        ]);
+//        log_message('debug', 'Last Query: {query}', [
+//            'query' => $this->db->getLastQuery()
+//        ]);
 
         return $query->getResultArray();
     }
@@ -232,6 +232,32 @@ class PermissionsService extends BaseService
         }
 
         return $parents;
+    }
+
+    public function getPermissionsHierarchyForPackage(int $packageId): array
+    {
+        // We'll build the hierarchy but only include permissions that belong to the package
+        $packagePermissions = $this->getPackagePermissions($packageId);
+        $packagePermissionIds = array_column($packagePermissions, 'permission_id');
+        $hierarchy = [];
+        $allPermissionsHierarchy = $this->getPermissionsHierarchy();
+
+        foreach ($allPermissionsHierarchy as $parent) {
+            // Check if parent is in package permissions
+            if (in_array($parent['permission_id'], $packagePermissionIds)) {
+                $filteredParent = $parent;
+                $filteredParent['children'] = [];
+                // Now filter children
+                foreach ($parent['children'] as $child) {
+                    if (in_array($child['permission_id'], $packagePermissionIds)) {
+                        $filteredParent['children'][] = $child;
+                    }
+                }
+                $hierarchy[] = $filteredParent;
+            }
+        }
+
+        return $hierarchy;
     }
 
     public function updatePackagePermissions(int $packageId, array $permissionIds): void

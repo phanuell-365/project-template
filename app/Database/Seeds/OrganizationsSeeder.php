@@ -24,8 +24,8 @@ class OrganizationsSeeder extends Seeder
         ];
 
         // Empty the organizations table before inserting
-        $this->db->table('organizations')
-            ->truncate();
+//        $this->db->table('organizations')
+//            ->truncate();
 
         // Before inserting, lookup the package ID for 'super-admin' package
         $package = $this->db->table('packages')

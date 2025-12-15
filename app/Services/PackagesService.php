@@ -159,6 +159,26 @@ class PackagesService extends BaseService
 
     public function deletePackage(int $packageId): array
     {
+        // Before all this, we might want to check if any organizations are using this package
+        $usageQuery = $this->db->query("
+            SELECT COUNT(*) AS organization_count
+            FROM organizations
+            WHERE package_id = :package_id:
+              AND deleted_at IS NULL
+        ", [
+            'package_id' => $packageId,
+        ]);
+
+        $usageResult = $usageQuery->getRowArray();
+        $organizationCount = $usageResult['organization_count'] ?? 0;
+
+        if ($organizationCount > 0) {
+            return [
+                'success' => false,
+                'message' => 'Cannot delete package. There are organizations currently using this package.',
+            ];
+        }
+
         $data = [
             'deleted_at' => date('Y-m-d H:i:s'),
         ];

@@ -313,6 +313,54 @@ class PermissionsSeeder extends Seeder
                 'slug'        => 'system.package.permissions.assign',
                 'order'       => null,
             ],
+            // Action: Create Package Group Template (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Create Package Group Template',
+                'description' => 'Add new package group permission templates',
+                'uri'         => '/system/package-settings/group-templates/create',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'system.settings',
+                'icon'        => null,
+                'slug'        => 'system.package.group.create',
+                'order'       => null,
+            ],
+            // Action: Edit Package Group Template (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Edit Package Group Template',
+                'description' => 'Modify existing package group permission templates',
+                'uri'         => '/system/package-settings/group-templates/edit',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'system.settings',
+                'icon'        => null,
+                'slug'        => 'system.package.group.edit',
+                'order'       => null,
+            ],
+            // Action: Delete Package Group Template (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Delete Package Group Template',
+                'description' => 'Remove package group permission templates',
+                'uri'         => '/system/package-settings/group-templates/delete',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'system.settings',
+                'icon'        => null,
+                'slug'        => 'system.package.group.delete',
+                'order'       => null,
+            ],
+            // Action: Assign Permissions to Package Group Template (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Assign Permissions to Package Group Template',
+                'description' => 'Manage permissions assigned to package group templates',
+                'uri'         => '/system/package-settings/group-templates/permissions',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'system.settings',
+                'icon'        => null,
+                'slug'        => 'system.package.group.permissions.assign',
+                'order'       => null,
+            ],
             // Child: Group Settings (Sidebar Link)
             [
                 'name'        => 'Group Settings',

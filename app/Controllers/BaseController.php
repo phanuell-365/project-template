@@ -49,7 +49,8 @@ abstract class BaseController extends Controller
         'date',
         'filesystem',
         'html',
-        'flash_message'
+        'flash_message',
+        'package_permissions_settings_tabs',
     ];
 
     /**

@@ -1,9 +1,15 @@
 <?php
 
+/**
+ * @var array $packages
+ * @var string $org_slug
+ * @var string $org_name
+ */
 $this->extend('layouts/main');
 
-$org_slug = $org_slug ?? '';
 $packages = $packages ?? [];
+
+//dd('org_slug', $org_slug);
 
 $form_input_controls = [
         'name'          => [
@@ -190,7 +196,10 @@ $form_textarea_controls = [
 
 <?php $this->section('content'); ?>
     <div class="grid grid-cols-1 gap-4">
-        <?= form_open(route_to('create-package-settings', $org_slug), ['class' => 'mt-6 space-y-6']) ?>
+        <?= form_open(route_to('create-package-settings', $org_slug), [
+                'class' => 'mt-6 space-y-6',
+                'id'    => 'create-package-form'
+        ]) ?>
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Create New Package</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!--            --><?php //= $name_input ?>
@@ -223,7 +232,7 @@ $form_textarea_controls = [
 
             <div class="md:col-span-2">
                 <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-soko-600 hover:bg-soko-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-soko-500">
+                        class="btn btn-sm normal-case btn-primary text-white">
                     Create Package
                 </button>
             </div>
@@ -233,12 +242,12 @@ $form_textarea_controls = [
         <!-- Existing Packages List -->
         <div class="mt-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Existing Packages</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                 <?php if (!empty($packages)): ?>
                     <?php foreach ($packages as $package): ?>
-                        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="flex flex-col justify-between bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
                             <div class="p-6 border-b border-gray-200">
-                                <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-start justify-between mb-4 gap-4">
                                     <div class="flex flex-col space-y-2">
                                         <h3 class="text-xl font-bold text-gray-900"><?= esc($package['name']) ?></h3>
                                         <!-- description -->
@@ -248,32 +257,58 @@ $form_textarea_controls = [
                                                     class="text-sm text-gray-500">/<?= ((int)$package['duration_days'] === 0 ? 'Unlimited' : $package['duration_days'] . ' days') ?></span>
                                         </p>
                                     </div>
-                                    <button class="p-2 bg-primary hover:bg-primary/60 rounded-lg transition-colors"
+                                    <button class="btn btn-square btn-outlined"
                                             aria-label="Edit Package Settings" data-package-id="<?= $package['id'] ?>"
                                             data-package-data='<?= json_encode($package) ?>'
                                     >
-                                        <span class="material-symbols-rounded text-white">
+                                        <span class="material-symbols-rounded ">
                                             edit
                                         </span>
                                     </button>
+                                    <!-- The delete button -->
+                                    <button class="btn btn-square btn-error delete-package-btn"
+                                            aria-label="Delete Package"
+                                            data-package-id="<?= $package['id'] ?>"
+                                            data-package-name="<?= esc($package['name']) ?>"
+                                    >
+                                        <span class="material-symbols-rounded text-white">
+                                            delete
+                                        </span>
+                                    </button>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-                                    <div><p class="text-sm text-gray-500">Organizations</p>
-                                        <p class="text-2xl font-semibold text-gray-900"><?= $package['organization_count'] ?></p>
-                                    </div>
-                                    <div><p class="text-sm text-gray-500">Permissions</p>
-                                        <p class="text-2xl font-semibold text-gray-900"><?= $package['permission_count'] ?></p>
-                                    </div>
+                                <!--                                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">-->
+                                <!--                                    <div><p class="text-sm text-gray-500">Organizations</p>-->
+                                <!--                                        <p class="text-2xl font-semibold text-gray-900">-->
+                                <?php //= $package['organization_count'] ?><!--</p>-->
+                                <!--                                    </div>-->
+                                <!--                                    <div><p class="text-sm text-gray-500">Permissions</p>-->
+                                <!--                                        <p class="text-2xl font-semibold text-gray-900">-->
+                                <?php //= $package['permission_count'] ?><!--</p>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                            </div>
+                            <div class="space-y-3 mb-4 p-6">
+                                <div class="flex items-center justify-between py-2 border-b border-gray-100"><span
+                                            class="text-sm text-gray-600">Organizations</span><span
+                                            class="font-semibold text-gray-900"><?= $package['organization_count'] ?></span>
+                                </div>
+                                <div class="flex items-center justify-between py-2 border-b border-gray-100"><span
+                                            class="text-sm text-gray-600">Permissions</span><span
+                                            class="font-semibold text-gray-900"><?= $package['permission_count'] ?></span>
+                                </div>
+                                <div class="flex items-center justify-between py-2"><span class="text-sm text-gray-600">Group Templates</span>
+                                    <div class="flex items-center gap-2"><span
+                                                class="font-semibold text-gray-900">0</span></div>
                                 </div>
                             </div>
                             <div class="p-4 bg-gray-50">
                                 <button
                                         class="manage-permissions-btn w-full flex items-center justify-center gap-2 py-2 text-soko-600 hover:text-soko-700 font-medium"
                                         data-package-id="<?= $package['id'] ?>">
-                                    Manage Permissions
                                     <span class="material-symbols-rounded">
-                                        arrow_forward_ios
+                                        security
                                     </span>
+                                    Configure Package
                                 </button>
                             </div>
                         </div>
@@ -314,8 +349,11 @@ $this->section('bottom-scripts');
                 // Extract the package ID from the data attribute
                 const packageId = $(this).data('package-id');
                 // Redirect to the manage permissions page for the specific package
-                window.location.href =
-                    `<?= base_url(route_to('update-package-permissions', esc($org_slug))) ?>?package_id=${packageId}`;
+                const href =
+                    `<?= base_url(route_to('get-package-permissions', esc($org_slug))) ?>?package_id=${packageId}`;
+
+                console.log(href);
+                window.location.href = href;
             });
 
             const editButtons = $('button[aria-label="Edit Package Settings"]');
@@ -409,13 +447,21 @@ $this->section('bottom-scripts');
                 });
 
                 if (isConfirmed) {
+                    const $form = $('#create-package-form');
+
                     // Send the updated data to the server via AJAX
                     $.ajax({
                         url: `<?= route_to('edit-package-settings', esc($org_slug)) ?>`,
                         method: 'PUT',
                         data: formValues,
-                        success: function (response) {
-                            console.debug('response', response);
+                        success: function (response, textStatus, xhr) {
+                            // console.debug('response', response);
+
+                            const newCsrfToken = xhr.getResponseHeader('X-CSRF-Token');
+                            if (newCsrfToken) {
+                                // Update the CSRF token in the form
+                                $form.find(`input[name='<?= csrf_token() ?>']`).val(newCsrfToken);
+                            }
                             // Handle success (e.g., show a success message, update the UI)
                             ShowNotification({
                                 title: 'Success',
@@ -427,6 +473,13 @@ $this->section('bottom-scripts');
                             });
                         },
                         error: function (xhr, status, error) {
+
+                            const newCsrfToken = xhr.getResponseHeader('X-CSRF-Token');
+                            if (newCsrfToken) {
+                                // Update the CSRF token in the form
+                                $form.find(`input[name='<?= csrf_token() ?>']`).val(newCsrfToken);
+                            }
+
                             // Handle error (e.g., show an error message)
                             ShowNotification({
                                 title: 'Error',
@@ -436,6 +489,90 @@ $this->section('bottom-scripts');
                         }
                     });
                 }
+            });
+
+            // Handle Delete Package button click
+            $('.delete-package-btn').on('click', function () {
+                const packageId = $(this).data('package-id');
+                const packageName = $(this).data('package-name');
+
+                // Let's complicate this deletion a bit by having the user input the package name to confirm deletion
+                // Just like GitHub does it
+
+                const htmlContent = `
+                    <p class="mb-4">To confirm deletion, please enter the Package Name: <strong>${packageName}</strong></p>
+                    <input type="text" id="confirm-package-name" class="swal2-input" placeholder="Enter Package Name to confirm">
+                `;
+
+                const $form = $('#create-package-form');
+
+                ShowNotification({
+                    title: 'Confirm Deletion',
+                    // text: 'Are you sure you want to delete this package? This action cannot be undone.',
+                    html: htmlContent,
+                    preConfirm: () => {
+                        const inputName = $('#confirm-package-name').val();
+                        if (inputName !== packageName) {
+                            ShowNotification({
+                                title: 'Error',
+                                text: 'Package Name does not match. Deletion cancelled.',
+                                icon: 'error',
+                            });
+                            return false; // Prevent the modal from closing
+                        }
+                        return true; // Proceed with deletion
+                    },
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Delete',
+                    cancelButtonText: 'Cancel',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Send delete request via AJAX
+                        $.ajax({
+                            url: `<?= route_to('delete-package-settings', esc($org_slug)) ?>`,
+                            method: 'DELETE',
+                            data: {
+                                package_id: packageId,
+                                '<?= csrf_token() ?>': $form.find(`input[name='<?= csrf_token() ?>']`).val()
+                            },
+                            success: function (response, textStatus, xhr) {
+                                const newCsrfToken = xhr.getResponseHeader('X-CSRF-Token');
+                                if (newCsrfToken) {
+                                    // Update the CSRF token in the form
+                                    $form.find(`input[name='<?= csrf_token() ?>']`).val(newCsrfToken);
+                                }
+
+                                // Handle success
+                                ShowNotification({
+                                    title: 'Deleted',
+                                    // text: 'Package deleted successfully.',
+                                    text: response.message || 'Package deleted successfully.',
+                                    icon: 'success',
+                                }).then(() => {
+                                    // Reload the page or update the package list
+                                    location.reload();
+                                });
+                            },
+                            error: function (xhr, status, error) {
+
+                                const newCsrfToken = xhr.getResponseHeader('X-CSRF-Token');
+                                if (newCsrfToken) {
+                                    // Update the CSRF token in the form
+                                    $form.find(`input[name='<?= csrf_token() ?>']`).val(newCsrfToken);
+                                }
+
+                                // Handle error
+                                ShowNotification({
+                                    title: 'Error',
+                                    // text: 'An error occurred while deleting the package. Please try again.',
+                                    text: xhr.responseJSON?.message || 'An error occurred while deleting the package. Please try again.',
+                                    icon: 'error',
+                                });
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>
