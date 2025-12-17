@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Services\PermissionsService;
+use App\Services\SettingsService;
 use CodeIgniter\Cache\CacheInterface;
 use CodeIgniter\Controller;
 use CodeIgniter\Database\BaseConnection;
@@ -68,6 +69,7 @@ abstract class BaseController extends Controller
     protected PermissionsService | null $permissionsService;
 
     protected string $org_slug = '';
+    protected SettingsService $settings_service;
 
     /**
      * @return void
@@ -96,6 +98,8 @@ abstract class BaseController extends Controller
         $this->cache = Services::cache();
 
         $this->permissionsService = Services::permissions_service();
+
+        $this->settings_service = Services::settings_service();
 
         $this->org_slug = $this->request->getUri()->getSegment(1) ?? '';
 

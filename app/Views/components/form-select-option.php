@@ -9,6 +9,8 @@ $selectData = [
     'class' => 'w-full px-3 py-2 bg-transparent appearance-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-soko-500 focus:border-soko-500 block',
 ];
 
+$helper_text = $props['helper-text'] ?? '';
+
 // the input is automatically labeled, so we need to remove the label if it is set to false
 $hasLabel = $props['has-label'] ?? true;
 
@@ -71,6 +73,7 @@ if (isset($props['disabled']) && $props['disabled'] === true) {
 
     <?php if ($hasLabel) : ?>
         <?= form_label($labelData['label'], $props['id'], ['class' => $labelData['class']]) ?>
+        <small class="block tracking-tight text-xs text-gray-500"><?= $helper_text ?></small>
     <?php endif; ?>
 
     <?= view('components/form-input-error', [

@@ -124,13 +124,13 @@ class GroupsService extends BaseService
             $slug = url_title($data['name'], '-', true);
 
             log_message('debug', 'Saving Package Group Permissions Template: ' . json_encode([
-                'package_id'      => $packageId,
-                'template_id'     => $templateId,
-                'name'            => $data['name'],
-                'description'     => $data['description'],
-                'permission_json' => $data['permission_json'],
-                'slug'            => $slug,
-            ], JSON_PRETTY_PRINT));
+                    'package_id'      => $packageId,
+                    'template_id'     => $templateId,
+                    'name'            => $data['name'],
+                    'description'     => $data['description'],
+                    'permission_json' => $data['permission_json'],
+                    'slug'            => $slug,
+                ], JSON_PRETTY_PRINT));
 
             if ($templateId !== 'new') {
                 // Update existing template
@@ -169,8 +169,8 @@ class GroupsService extends BaseService
             }
 
             return [
-                'success' => true,
-                'message' => 'Template saved successfully.',
+                'success'     => true,
+                'message'     => 'Template saved successfully.',
                 'template_id' => $templateId
             ];
         } catch (Exception $e) {
@@ -225,5 +225,22 @@ class GroupsService extends BaseService
             'success' => true,
             'message' => 'Template deleted successfully.'
         ];
+    }
+
+    public function getGroupsUnderOrganization(string $orgSlug): array
+    {
+        $sql = "
+            SELECT g.id, g.name, g.description
+            FROM groups g
+            INNER JOIN organizations o ON g.organization_id = o.id
+            WHERE o.slug = :org_slug:
+              AND g.deleted_at IS NULL
+        ";
+
+        $query = $this->db->query($sql, [
+            'org_slug' => $orgSlug,
+        ]);
+
+        return $query->getResultArray();
     }
 }

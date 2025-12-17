@@ -52,6 +52,15 @@ $routes->group('(:segment)', ['namespace' => 'App\Controllers'], function ($rout
             $routes->get('permissions', 'GroupsSettingsController::getPermissions', ['as' => 'get-group-permissions']);
         });
     });
+
+    $routes->group('organisation', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->get('create', 'OrganisationController::createOrganizationView', ['as' => 'create-organisation-view']);
+        $routes->post('create', 'OrganisationController::createOrganization', ['as' => 'create-organisation']);
+        $routes->get('profile', 'OrganisationController::profileView', ['as' => 'organisation-profile-view']);
+        $routes->post('profile', 'OrganisationController::updateProfile', ['as' => 'update-organisation-profile']);
+        $routes->get('settings', 'SettingsController::generalSettingsView', ['as' => 'general-settings-view']);
+        $routes->post('settings', 'SettingsController::saveGeneralSettings', ['as' => 'save-general-settings']);
+    });
 });
 
 $routes->view('/unauthorized', 'errors/main/unauthorized', ['as' => 'unauthorized']);

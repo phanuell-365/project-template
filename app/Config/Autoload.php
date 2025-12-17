@@ -88,5 +88,14 @@ class Autoload extends AutoloadConfig
      *
      * @var list<string>
      */
-    public $helpers = [];
+    public $helpers = [
+        'file_upload_values',
+        'file_base64_values',
+        'flash_message',
+        'package_permissions_settings_tabs',
+        'form',
+        'html',
+        'date',
+        'text',
+    ];
 }

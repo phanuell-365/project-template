@@ -7,11 +7,13 @@ $textarea = [
     'id' => $props['id'] ?? '',
     'name' => $props['name'] ?? '',
     'value' => $props['value'] ?? old($props['name'] ?? ''),
-    'class' => "px-3 py-2 text-gray-900 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-soko-500 focus:border-soko-500 focus:z-10 sm:text-sm " . $resizeClass,
+    'class' => "w-full px-3 py-2 text-gray-900 placeholder-gray-400 border border-gray-300 rounded-md focus:outline-none focus:ring-soko-500 focus:border-soko-500 focus:z-10 sm:text-sm " . $resizeClass,
     'placeholder' => $props['placeholder'] ?? '',
     'rows' => $props['rows'] ?? 3,
     'cols' => $props['cols'] ?? 20,
 ];
+
+$helper_text = $props['helper-text'] ?? '';
 
 $disableLabelClass = $props['disable-label-class'] ?? false;
 
@@ -55,6 +57,7 @@ $errorFeedback = $props['invalid-feedback'] ?? '';
 <div class="<?= $props['outer-class'] ?? '' ?>">
     <?php if ($hasLabel) : ?>
         <?= form_label($labelData['label'], $props['id'], ['class' => $labelData['class']]) ?>
+        <small class="block tracking-tight text-xs text-gray-500"><?= $helper_text ?></small>
     <?php endif; ?>
 
     <?= view('components/form-input-error', [

@@ -1,5 +1,15 @@
 <?php
+
+/**
+ * @var $org_slug string
+ */
+
 $sidebar_tree = session()->get("sidebar_tree");
+$settings_service = service('settings_service');
+
+$site_logo = $settings_service->getSiteLogoUrl($org_slug) ?? base_url('img/app-logo.png');
+$site_name = $settings_service->getSiteName($org_slug) ?? 'My Application';
+$site_favicon = $settings_service->getSiteFaviconUrl($org_slug) ?? base_url('img/favicon/favicon.ico');
 //dd($sidebar_tree);
 
 function buildChildMenu($children, $level = 1): string
@@ -101,7 +111,8 @@ if (!empty($sidebar_tree)) {
 
     <?= $this->renderSection('meta') ?>
 
-    <link rel="icon" href="<?= base_url('img/favicon/favicon.ico') ?>" type="image/x-icon">
+<!--    <link rel="icon" href="--><?php //= base_url('img/favicon/favicon.ico') ?><!--" type="image/x-icon">-->
+    <link rel="icon" href="<?= $site_favicon ?>" type="image/x-icon">
     <link rel="stylesheet" href="<?= base_url('css/tailwind.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= base_url('css/sweetalert2.min.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= base_url('css/select2.min.css') ?>?v=<?= time() ?>">
@@ -125,7 +136,8 @@ if (!empty($sidebar_tree)) {
            tabindex="-1" aria-labelledby="drawer-navigation-label">
         <!-- Logo Section -->
         <div class="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/80 px-6 py-5 z-10">
-            <img src="<?= base_url('img/app-logo.png') ?>" alt="app-logo" class="h-9 w-auto"/>
+<!--            <img src="--><?php //= base_url('img/app-logo.png') ?><!--" alt="app-logo" class="h-9 w-auto"/>-->
+            <img src="<?= $site_logo ?>" alt="site-logo" class="h-9 w-auto mx-auto"/>
         </div>
         <div id="drawer-navigation" class="py-6">
             <!-- Sidebar content will be injected here -->
@@ -208,7 +220,7 @@ if (!empty($sidebar_tree)) {
 
         <?= view('components/flash-message') ?>
 
-        <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        <div class="flex min-h-full flex-col justify-center px-6 pb-16 pt-6 lg:px-8">
             <!-- We will be rendering the content inside a card -->
             <div class="mt-10 sm:mx-auto sm:w-full bg-white/90 backdrop-blur-sm p-8 rounded-lg shadow-lg border border-gray-200/80">
                 <?= $this->renderSection('content') ?>

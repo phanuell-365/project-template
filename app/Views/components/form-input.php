@@ -110,7 +110,7 @@ if ($helper_text === '') {
 }
 
 // Check if there are any other fall through attributes to add to the input
-$allowedAttributes = ['required', 'readonly', 'disabled', 'min', 'max', 'step', 'pattern', 'maxlength', 'minlength', 'size', 'placeholder', 'autocomplete', 'autofocus', 'multiple'];
+$allowedAttributes = ['required', 'readonly', 'disabled', 'min', 'max', 'step', 'pattern', 'maxlength', 'minlength', 'size', 'placeholder', 'autocomplete', 'autofocus', 'multiple', 'accept'];
 
 foreach ($props as $key => $value) {
     if (in_array($key, $allowedAttributes) && !isset($inputData[$key])) {
