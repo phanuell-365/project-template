@@ -6,6 +6,7 @@ use App\Services\GroupsService;
 use App\Services\PackagesService;
 use App\Services\PermissionsService;
 use App\Services\SettingsService;
+use App\Services\TemplateService;
 use App\Services\UsersService;
 use CodeIgniter\Config\BaseService;
 
@@ -78,5 +79,14 @@ class Services extends BaseService
         }
 
         return new SettingsService();
+    }
+
+    public static function templates_service($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('templates_service');
+        }
+
+        return new TemplateService();
     }
 }

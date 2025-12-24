@@ -276,10 +276,6 @@
     .carousel {
         transition: left 0.5s ease-out; /* add a transition for the sliding animation */
     }
-
-    .dt-buttons {
-        @apply inline-flex;
-    }
 }
 
 @keyframes waves {
@@ -312,22 +308,6 @@
     /*  This is the pagination wrapper  */
     @apply flex items-center justify-between px-4 py-2 text-sm;
     /* style the middle part of the pagination excluding the previous and next buttons */
-}
-
-.dataTables_paginate > a.paginate_button:first-of-type {
-    @apply px-4 py-2 text-sm font-semibold text-primary bg-white first:border-r-0 first:border-y first:border-l border-primary first:rounded-l-lg hover:text-white hover:bg-primary focus:z-10 focus:ring-2 focus:ring-primary focus:text-primary focus:outline-none;
-}
-
-.dataTables_paginate > a.paginate_button:last-of-type {
-    @apply px-4 py-2 text-sm font-semibold text-primary bg-white last:border-l-0 last:border-y last:border-r border-primary last:rounded-r-lg hover:text-white hover:bg-primary focus:z-10 focus:ring-2 focus:ring-primary focus:text-primary focus:outline-none;
-}
-
-.dataTables_paginate > span > a.paginate_button {
-    @apply px-4 py-2 text-sm font-semibold text-primary bg-white border-primary border hover:text-white hover:bg-primary focus:z-10 focus:ring-2 focus:ring-primary focus:text-primary focus:outline-none;
-}
-
-.dataTables_paginate > span > a.paginate_button.current {
-    @apply px-4 py-2 text-sm font-semibold text-white bg-primary border-primary border hover:text-white hover:bg-primary focus:z-10 focus:ring-2 focus:ring-primary focus:text-primary focus:outline-none;
 }
 
 @layer utilities {

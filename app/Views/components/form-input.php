@@ -74,8 +74,10 @@ $errorFeedback = $props['invalid-feedback'] ?? '';
 // pick all the errors from the 'errors' key in props
 $errors = $props['errors'] ?? [];
 
-if (isset($errors[$inputData['name']])) {
-//    dd('here', $errors, $inputData['name']);
+//dd($errors);
+
+//dd('here', $errors, $inputData['name']);
+if (!empty($errors) && isset($errors[$inputData['name']])) {
     // there is an error for this input
     $errorFeedback = $errors[$inputData['name']];
     // append the error class to the input's class

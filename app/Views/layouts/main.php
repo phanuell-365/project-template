@@ -117,7 +117,7 @@ if (!empty($sidebar_tree)) {
     <link rel="stylesheet" href="<?= base_url('css/sweetalert2.min.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= base_url('css/select2.min.css') ?>?v=<?= time() ?>">
 
-    <?= $this->renderSection('link') ?>
+    <?= $this->renderSection('links') ?>
 
     <script type="module" src="<?= base_url('js/moment.js') ?>"></script>
     <script src="<?= base_url('js/lodash.min.js') ?>"></script>
@@ -125,6 +125,8 @@ if (!empty($sidebar_tree)) {
     <script src="<?= base_url('js/select2.min.js') ?>"></script>
     <script src="<?= base_url('js/sweetalert2.min.js') ?>"></script>
     <script src="<?= base_url('js/new.swal.js') ?>"></script>
+
+    <?= $this->renderSection('scripts') ?>
 
     <title><?= $this->renderSection('title') ?></title>
 </head>

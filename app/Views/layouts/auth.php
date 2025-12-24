@@ -1,3 +1,13 @@
+<?php
+
+/**
+ * @var $org_slug string
+ */
+
+$settings_service = service('settings_service');
+$site_logo = $settings_service->getSiteLogoUrl($org_slug) ?? base_url('img/app-logo.png');
+?>
+
 <!doctype html>
 <html lang="en" class="font-montserrat bg-light h-screen">
 <head>
@@ -22,7 +32,7 @@
 
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img src="<?= base_url('img/app-logo.png') ?>" alt="app-logo"
+        <img src="<?= $site_logo ?>" alt="app-logo"
              class="mx-auto h-10 w-auto"/>
         <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             <?= $this->renderSection('heading') ?>

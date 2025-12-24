@@ -15,7 +15,7 @@ $errorFeedbackClass = !empty($errorFeedback) ? 'flex' : 'hidden';
                 error
             </span>
             <span class="text-sm error-feedback-text">
-                <?= esc($errorFeedback) ?>
+                <?= $errorFeedback ?>
             </span>
         </span>
     <!--  provide an overriding button to hide the error  -->

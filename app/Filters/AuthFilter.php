@@ -79,6 +79,19 @@ class AuthFilter implements FilterInterface
      */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        //
+        // Add X-CSRF-Token header to the response for AJAX requests for CSRF protection for authenticated users
+//        if ($request->isAJAX()) {
+//            $response->setHeader('X-CSRF-Token', csrf_hash());
+//        }
+//
+//        return $response;
+
+        $isLoggedIn = session()->get('isLoggedIn');
+
+        if ($request->isAJAX() && $isLoggedIn) {
+            $response->setHeader('X-CSRF-Token', csrf_hash());
+        }
+
+        return $response;
     }
 }

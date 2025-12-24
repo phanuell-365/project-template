@@ -104,6 +104,12 @@ class Filters extends BaseFilters
             'cors',
             // 'honeypot',
             // 'secureheaders',
+            'auth' => [
+                'except' => [
+                    '([^/]+)/auth/*',
+                    'unauthorized',
+                ],
+            ],
         ],
     ];
 

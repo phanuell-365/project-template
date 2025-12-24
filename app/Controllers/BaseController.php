@@ -52,6 +52,7 @@ abstract class BaseController extends Controller
         'html',
         'flash_message',
         'package_permissions_settings_tabs',
+        'inflector'
     ];
 
     /**

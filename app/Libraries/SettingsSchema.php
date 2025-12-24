@@ -384,5 +384,27 @@ class SettingsSchema
                 ],
             ],
         ],
+        'support'  => [
+            'title' => 'Support Settings',
+//            'icon'  => 'life-ring',
+            'icon'  => 'support',
+            'order' => 7,
+            'value' => [
+                'support_email' => [
+                    'label'       => 'Support Email',
+                    'helper-text' => 'The email address for customer support.',
+                    'validation'  => 'required|valid_email',
+                    'type'        => 'email',
+                    'default'     => '',
+                ],
+                'support_phone' => [
+                    'label'       => 'Support Phone',
+                    'helper-text' => 'The phone number for customer support.',
+                    'validation'  => 'required|string',
+                    'type'        => 'tel',
+                    'default'     => '',
+                ],
+            ],
+        ],
     ];
 }

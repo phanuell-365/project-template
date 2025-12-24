@@ -238,6 +238,54 @@ class PermissionsSeeder extends Seeder
                 'slug'        => 'organisation.billing.history',
                 'order'       => null,
             ],
+            // Child: Subscription Plans (Sidebar Link)
+            [
+                'name'        => 'Subscription Plans',
+                'description' => 'View and manage subscription plans',
+                'uri'         => '/organisation/subscriptions',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'organisation.settings',
+                'icon'        => 'subscriptions',
+                'slug'        => 'organisation.subscriptions.view',
+                'order'       => 3,
+            ],
+            // Action: Change Subscription (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Change Subscription',
+                'description' => 'Modify organisation subscription plan',
+                'uri'         => '/organisation/subscriptions/change',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'organisation.settings',
+                'icon'        => null,
+                'slug'        => 'organisation.subscriptions.change',
+                'order'       => null,
+            ],
+            // Action: Cancel Subscription (Not in Sidebar/Hidden)
+            [
+                'name'        => 'Cancel Subscription',
+                'description' => 'Cancel organisation subscription plan',
+                'uri'         => '/organisation/subscriptions/cancel',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'organisation.settings',
+                'icon'        => null,
+                'slug'        => 'organisation.subscriptions.cancel',
+                'order'       => null,
+            ],
+            // Child: Communication Templates (Sidebar Link)
+            [
+                'name'        => 'Communication Templates',
+                'description' => 'View and manage communication templates',
+                'uri'         => '/organisation/communication-templates',
+                'is_parent'   => 0,
+                'context'     => 'admin',
+                'parent_slug' => 'organisation.settings',
+                'icon'        => 'email',
+                'slug'        => 'organisation.communication.templates',
+                'order'       => 4,
+            ],
             // ============================================================
             // 5. SYSTEM SETTINGS (Module)
             // ============================================================
@@ -361,66 +409,6 @@ class PermissionsSeeder extends Seeder
                 'slug'        => 'system.package.group.permissions.assign',
                 'order'       => null,
             ],
-            // Child: Group Settings (Sidebar Link)
-            [
-                'name'        => 'Group Settings',
-                'description' => 'View and manage group settings',
-                'uri'         => '/system/group-settings',
-                'is_parent'   => 0,
-                'context'     => 'admin',
-                'parent_slug' => 'system.settings',
-                'icon'        => 'group_work',
-                'slug'        => 'system.group.settings',
-                'order'       => 2,
-            ],
-            // Action: Create Group Permission Template (Not in Sidebar/Hidden)
-            [
-                'name'        => 'Create Group Permission Template',
-                'description' => 'Add new group permission templates',
-                'uri'         => '/system/group-settings/create',
-                'is_parent'   => 0,
-                'context'     => 'admin',
-                'parent_slug' => 'system.settings',
-                'icon'        => null,
-                'slug'        => 'system.group.create',
-                'order'       => null,
-            ],
-            // Action: Edit Group Permission Template (Not in Sidebar/Hidden)
-            [
-                'name'        => 'Edit Group Permission Template',
-                'description' => 'Modify existing group permission templates',
-                'uri'         => '/system/group-settings/edit',
-                'is_parent'   => 0,
-                'context'     => 'admin',
-                'parent_slug' => 'system.settings',
-                'icon'        => null,
-                'slug'        => 'system.group.edit',
-                'order'       => null,
-            ],
-            // Action: Delete Group Permission Template (Not in Sidebar/Hidden)
-            [
-                'name'        => 'Delete Group Permission Template',
-                'description' => 'Remove group permission templates',
-                'uri'         => '/system/group-settings/delete',
-                'is_parent'   => 0,
-                'context'     => 'admin',
-                'parent_slug' => 'system.settings',
-                'icon'        => null,
-                'slug'        => 'system.group.delete',
-                'order'       => null,
-            ],
-            // Action: Assign Permissions to Group Template (Not in Sidebar/Hidden)
-            [
-                'name'        => 'Assign Permissions to Group Template',
-                'description' => 'Manage permissions assigned to group templates',
-                'uri'         => '/system/group-settings/permissions',
-                'is_parent'   => 0,
-                'context'     => 'admin',
-                'parent_slug' => 'system.settings',
-                'icon'        => null,
-                'slug'        => 'system.group.permissions.assign',
-                'order'       => null,
-            ],
             // ============================================================
             // 6. SYSTEM LOGS (Module)
             // ============================================================
@@ -463,7 +451,11 @@ class PermissionsSeeder extends Seeder
         ];
 
         // Empty the permissions table before seeding
-        $this->db->table('permissions')->emptyTable();
+//        $this->db->table('permissions')->emptyTable();
+        // Mark all existing permissions as deleted (soft delete)
+        $this->db->table('permissions')
+            ->where('deleted_at IS NULL', null, false)
+            ->update(['deleted_at' => date('Y-m-d H:i:s')]);
 
         // Insert data into the permissions table
 
