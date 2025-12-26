@@ -334,4 +334,29 @@ class SettingsService extends BaseService
 
         return null;
     }
+
+    public function getSetting(string $org_slug, string $setting_key): ?string
+    {
+        $sql = "
+            SELECT setting_value
+            FROM general_settings
+            WHERE context = :context:
+              AND setting_key = :setting_key:
+              AND deleted_at IS NULL
+            LIMIT 1
+        ";
+
+        $query = $this->db->query($sql, [
+            'context'     => 'site',
+            'setting_key' => $setting_key,
+        ]);
+
+        $result = $query->getRowArray();
+
+        if ($result && !empty($result['setting_value'])) {
+            return $result['setting_value'];
+        }
+
+        return null;
+    }
 }

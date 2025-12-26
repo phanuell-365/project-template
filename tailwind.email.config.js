@@ -1,14 +1,13 @@
 /** @type {import('tailwindcss').Config} */
-
 module.exports = {
+    // 1. Point ONLY to your email views
     content: [
-        "./app/**/*.{html,js,php}",
-        "./public/**/*.{html,js,php}",
-        "./modules/**/*.{html,js,php}",
-        "./node_modules/flowbite/**/*.js",
+        "./app/Views/emails/**/*.php",
+        "./app/Services/TemplateService.php", // If you have HTML strings in services
     ],
     theme: {
         extend: {
+            // Add custom email colors here if needed
             colors: {
                 // 'soko': {
                 //     '50': '#dff2f5',
@@ -64,8 +63,6 @@ module.exports = {
                 // },
             },
             fontFamily: {
-                'lato': ['Lato', 'Comic Neue', 'cursive', 'Ubuntu', 'sans-serif'],
-                'poppins': ['Poppins', 'Comic Neue', 'cursive', 'Ubuntu', 'sans-serif'],
                 montserrat: ['Montserrat', 'Ubuntu', 'sans-serif'],
             },
             fontSize: {
@@ -74,14 +71,13 @@ module.exports = {
                 'xs': '.75rem',
                 'sm': '.875rem',
             },
-            // add medium box shadow to different sides of an element
-            boxShadow: {
-                'md-left': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                'md-right': '-0 4px 6px -1px rgba(0, 0, 0, 0.1), -0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                'md-top': '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)',
-                'md-bottom': '0 4px 4px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            }
         },
+    },
+    // 2. CRITICAL: Disable Preflight
+    // This prevents Tailwind from adding the heavy "reset" styles
+    // (like body { margin: 0 }, img { display: block }) that confuse the inliner.
+    corePlugins: {
+        preflight: false,
     },
     daisyui: {
         themes: [
@@ -91,7 +87,7 @@ module.exports = {
                     // 'primary': '#59baca',
                     // 'primary': '#ff001a',
                     // 'primary': '#800080',
-                    'secondary': '#477d0e',
+                    "secondary": "#F000B8",
                     "accent": "#37CDBE",
                     "neutral": "#3D4451",
                     "base-100": "#FFFFFF",
@@ -104,10 +100,6 @@ module.exports = {
         ]
     },
     plugins: [
-        require('flowbite/plugin'),
         require("daisyui"),
-        require('@tailwindcss/forms'),
-        require('tailwind-scrollbar'),
     ],
 }
-

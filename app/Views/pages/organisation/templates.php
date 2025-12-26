@@ -106,6 +106,19 @@ $this->extend('layouts/main');
                             }
                         }
                     }];
+                } else if (attr === 'last_modified') {
+                    // We'll use Luxon for date formatting
+                    return [attr, {
+                        class: 'text-xxs sm:text-xs',
+                        render: function (data, type, row, meta) {
+                            if (data) {
+                                const dt = luxon.DateTime.fromFormat(data, "yyyy-MM-dd HH:mm:ss", {zone: 'utc'}).setZone(luxon.DateTime.local().zoneName);
+                                return dt.toLocaleString(luxon.DateTime.DATETIME_MED);
+                            } else {
+                                return 'N/A';
+                            }
+                        }
+                    }];
                 } else {
                     return [attr, {}];
                 }

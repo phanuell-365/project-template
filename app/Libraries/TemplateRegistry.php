@@ -7,7 +7,7 @@ class TemplateRegistry
     public static array $definitions = [
         'auth.new_company' => [
             'name' => 'New Company Registration',
-            'description' => 'Template for new company registration emails.',
+            'description' => 'Your company registration was completed successfully.',
             'placeholders' => [
                 'company_name' => 'Name of the registered company',
                 'registration_date' => 'Date of registration',
@@ -26,7 +26,7 @@ class TemplateRegistry
         ],
         'auth.new_user' => [
             'name' => 'New User Registration',
-            'description' => 'Template for new user registration emails.',
+            'description' => 'Your user account has been created successfully.',
             'placeholders' => [
                 'user_name' => 'Name of the registered user',
                 'user_email' => 'Email of the registered user',
@@ -46,7 +46,7 @@ class TemplateRegistry
         ],
         'auth.password_reset' => [
             'name' => 'Password Reset',
-            'description' => 'Template for password reset emails.',
+            'description' => 'A password reset request was received for your account.',
             'placeholders' => [
                 'user_name' => 'Name of the user',
                 'reset_link' => 'Link to reset password',

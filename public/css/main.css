@@ -170,7 +170,7 @@
 
     /* 2. Base Class (The "Inactive" State) */
     .material-symbols-rounded {
-        font-family: 'Material Symbols Rounded';
+        font-family: 'Material Symbols Rounded', serif;
         font-weight: normal;
         font-style: normal;
         font-size: 24px;
@@ -196,7 +196,7 @@
     /*}*/
 
     .material-symbols-rounded-filled {
-        font-family: 'Material Symbols Rounded Filled';
+        font-family: 'Material Symbols Rounded Filled', serif;
         font-weight: normal;
         font-style: normal;
         font-size: 24px;
@@ -324,5 +324,27 @@
 
     table.dataTable tbody tr.selected > * {
         @apply bg-soko-100;
+    }
+
+    .specific-email-prose p {
+        @apply mb-4;
+    }
+
+    .specific-email-prose p:last-child {
+        @apply mb-0;
+    }
+
+    .specific-email-prose ul {
+        @apply list-disc;
+        @apply ml-5;
+        @apply mb-4;
+    }
+
+    .specific-email-prose ul:last-child {
+        @apply mb-0;
+    }
+
+    .specific-email-prose ul li {
+        @apply mb-2;
     }
 }

@@ -1,0 +1,98 @@
+/* 1. Import Tailwind Utilities (No Base!) */
+@tailwind components;
+@tailwind utilities;
+
+/* 2. Your "Safe" Email Reset */
+/* Since we disabled Preflight, we add back ONLY what we need */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    word-break: break-word;
+    -webkit-font-smoothing: antialiased;
+}
+table { border-collapse: collapse; }
+img { border: 0; line-height: 100%; text-decoration: none; }
+
+
+
+/* 3. Your Custom "Prose" for Quill Content */
+/* These classes handle the naked <p> tags the user types */
+.email-prose p {
+    margin-bottom: 16px;
+    line-height: 1.6;
+    @apply text-xxs;
+    color: #374151; /* text-gray-700 */
+    font-family: Montserrat, Arial, sans-serif;
+}
+@media (min-width: 768px) {
+    .email-prose p {
+        @apply text-xs;
+    }
+}
+@media (min-width: 1024px) {
+    .email-prose p {
+        @apply text-sm;
+    }
+}
+@media (min-width: 1536px) {
+    .email-prose p {
+        @apply text-base;
+        line-height: 1.5rem;
+    }
+}
+.email-prose h1 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+.email-prose ul { padding-left: 20px; margin-bottom: 16px; }
+.email-prose li { margin-bottom: 8px; }
+.email-prose a { @apply text-soko-500; text-decoration: underline; }
+
+/* Montserrat Font Faces */
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat/Montserrat-Light.ttf") format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat/Montserrat-Regular.ttf") format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat/Montserrat-Medium.ttf") format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat/Montserrat-SemiBold.ttf") format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat/Montserrat-Bold.ttf") format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat/Montserrat-ExtraBold.ttf") format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("/fonts/Montserrat/Montserrat-Black.ttf") format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+

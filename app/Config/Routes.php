@@ -61,9 +61,9 @@ $routes->group('(:segment)', ['namespace' => 'App\Controllers'], function ($rout
         $routes->get('settings', 'SettingsController::generalSettingsView', ['as' => 'general-settings-view']);
         $routes->post('settings', 'SettingsController::saveGeneralSettings', ['as' => 'save-general-settings']);
         $routes->get('templates', 'TemplatesController::getTemplates', ['as' => 'get-communication-templates']);
-        $routes->post('templates', 'TemplatesController::saveTemplates', ['as' => 'save-communication-templates']);
         $routes->get('templates/edit', 'TemplatesController::editTemplateView', ['as' => 'edit-communication-template-view']);
         $routes->post('templates/edit', 'TemplatesController::saveTemplates', ['as' => 'edit-communication-templates']);
+        $routes->post('templates/preview', 'TemplatesController::previewTemplate', ['as' => 'preview-communication-template']);
     });
 });
 

@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build:tail": "npx tailwindcss -i public/css/main.css -o public/css/tailwind.css --verbose --watch",
+    "build:email": "npx tailwindcss -c tailwind.email.config.js -i public/css/email-input.css -o public/css/email-output.css --verbose --watch",
     "build:sass": "sass public/sass:public/css --watch"
   },
   "dependencies": {

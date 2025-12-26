@@ -282,7 +282,7 @@ class SetupSchema
             'order'       => 4,
         ],
         [
-            'name'       => 'Edit Template',
+            'name'        => 'Edit Template',
             'description' => 'Modify communication templates',
             'uri'         => '/organisation/templates/edit',
             'is_parent'   => 0,
@@ -290,6 +290,17 @@ class SetupSchema
             'parent_slug' => 'organisation.settings',
             'icon'        => null,
             'slug'        => 'organisation.communication.templates.edit',
+            'order'       => null,
+        ],
+        [
+            'name'        => 'Preview Template',
+            'description' => 'Preview communication templates',
+            'uri'         => '/organisation/templates/preview',
+            'is_parent'   => 0,
+            'context'     => 'admin',
+            'parent_slug' => 'organisation.settings',
+            'icon'        => null,
+            'slug'        => 'organisation.communication.templates.preview',
             'order'       => null,
         ],
         // ============================================================
