@@ -60,7 +60,7 @@ Edit Template - <?= esc($org_name ?? 'Organization') ?>
 
 <h1 class="text-3xl font-bold text-gray-900 mb-2">
     Edit <?= esc($template['name']) ?> Template
-    (<?= esc(ucfirst($template['channel'] === TemplateService::EMAIL_CHANNEL || $template['channel'] === TemplateService::RAW_EMAIL_CHANNEL ? 'email' : 'sms')) ?>
+    (<?= esc(ucfirst($template['channel'] == TemplateService::EMAIL_CHANNEL || $template['channel'] == TemplateService::RAW_EMAIL_CHANNEL ? 'email' : 'sms')) ?>
     )
 </h1>
 

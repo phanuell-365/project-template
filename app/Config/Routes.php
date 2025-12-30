@@ -21,6 +21,7 @@ $routes->group('(:segment)', ['namespace' => 'App\Controllers'], function ($rout
     $routes->get('dashboard', 'DashboardController::index', ['as' => 'dashboard']);
 
     $routes->group('users', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->get('/', 'UserController::index', ['as' => 'users']);
         $routes->get('create', 'UserController::createUserView', ['as' => 'create-user-view']);
         $routes->post('create', 'UserController::createUser', ['as' => 'create-user']);
         $routes->get('profile', 'UserController::profileView', ['as' => 'user-profile-view']);

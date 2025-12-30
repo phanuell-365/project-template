@@ -7,6 +7,7 @@ use App\Services\GroupsService;
 use App\Services\UsersService;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
+use Exception;
 
 class UserController extends BaseController
 {
@@ -39,7 +40,7 @@ class UserController extends BaseController
                 'email'     => 'required|valid_email',
                 'phone'     => 'permit_empty|numeric',
                 'status'    => 'required|in_list[1,0]',
-                'groups.*' => 'required|integer|is_not_unique[groups.id]',
+                'groups.*'  => 'required|integer|is_not_unique[groups.id]',
             ];
 
             if (!$this->validate($rules)) {
@@ -71,7 +72,10 @@ class UserController extends BaseController
                     'errors' => $result['errors']
                 ]);
 
-                flash_message('Creation Failed', 'An error occurred while creating the user. Please try again.', 'error');
+                // Get first value of first key in errors array
+                $firstError = reset($result['errors']);
+
+                flash_message('Creation Failed', $firstError ?? 'An error occurred while creating the user. Please try again.', 'error');
 
                 return redirect()
                     ->back()
@@ -80,6 +84,7 @@ class UserController extends BaseController
 
             // We'll notify the user via email here (TODO)
 
+
             $this->log_audit('User created successfully', true, [
                 'user_id' => $result['user_id']
             ]);
@@ -87,9 +92,9 @@ class UserController extends BaseController
             flash_message('User Created', 'The user has been created successfully.', 'success');
 
             return redirect()
-                ->to(route_to('users-list', $this->org_slug));
+                ->to(route_to('users', $this->org_slug));
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             log_message('error', '[EXCEPTION] {message} {stack}', [
                 'message' => $e->getMessage(),
                 'stack'   => $e->getTraceAsString(),

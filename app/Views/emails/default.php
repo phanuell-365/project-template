@@ -6,9 +6,9 @@
 
 $settings_service = service('settings_service');
 $site_logo = $settings_service->getSiteLogoUrl($org_slug) ?? base_url('img/app-logo.png');
-$support_address = $settings_service->getSetting($org_slug, 'support_address') ?? '1234 Default St, City, Country';
-$support_email = $settings_service->getSetting($org_slug, 'support_email') ?? 'admin@acmecorp.com';
-$support_phone = $settings_service->getSetting($org_slug, 'support_phone') ?? '+1 (555) 123-4567';
+$support_address = $settings_service->getSetting($org_slug, 'support', 'support_address') ?? '1234 Default St, City, Country';
+$support_email = $settings_service->getSetting($org_slug, 'support', 'support_email') ?? 'admin@acmecorp.com';
+$support_phone = $settings_service->getSetting($org_slug, 'support', 'support_phone') ?? '+1 (555) 123-4567';
 $app_name = $settings_service->getSiteName($org_slug) ?? 'AcmeCorp';
 ?>
 

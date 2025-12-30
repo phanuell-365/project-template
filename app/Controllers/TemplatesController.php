@@ -216,7 +216,7 @@ class TemplatesController extends BaseController
                     ->withInput();
             }
 
-//            $postData = $this->request->getPost();
+            $postData = $this->request->getPost();
 
             if ($data['channel'] === 'email') {
                 $rules = [
@@ -229,7 +229,7 @@ class TemplatesController extends BaseController
                 ];
             }
 
-            if (!$this->validate($rules)) {
+            if (!$this->validateData($postData, $rules)) {
 
                 $this->log_audit('Validation failed while saving communication template', false, [
                     'slug'    => $data['slug'] ?? 'null',
@@ -245,7 +245,9 @@ class TemplatesController extends BaseController
                     ->with('validation', $this->validator->getErrors());
             }
 
-            $postData = $this->validator->getValidated();
+//            $postData = $this->validator->getValidated();
+
+//            log_message('debug', 'Post data for saving template: {data}', ['data' => json_encode($postData)]);
 
             $saveData = $this->templates_service->saveTemplate($this->org_slug, $data['slug'], $data['channel'], $postData['subject'] ?? null, $postData['body']);
 

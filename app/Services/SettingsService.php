@@ -69,32 +69,12 @@ class SettingsService extends BaseService
                 // Firstly, if the current section is 'email' then;
 
                 if ($section === 'email') {
-                    if ($key === 'from_address' && empty($setting['value'])) {
-                        // Set default from_address to system email from env if not set
-                        $setting['value'] = getenv('EMAIL_SMTP_MAIL') ? : '';
-                    } elseif ($key === 'from_name' && empty($setting['value'])) {
-                        // Set default from_name to app name from env if not set
-                        $setting['value'] = getenv('EMAIL_SMTP_NAME') ? : 'My Application';
-                    } elseif ($key === 'smtp_port' && empty($setting['value'])) {
-                        // Set default smtp_port to 587 if not set
-                        $setting['value'] = getenv('EMAIL_SMTP_PORT') ? : 587;
-                    } elseif ($key === 'smtp_host' && empty($setting['value'])) {
-                        // Set default smtp_host to localhost if not set
-                        $setting['value'] = getenv('EMAIL_SMTP_HOST') ? : 'localhost';
-                    } elseif ($key === 'smtp_pass' && empty($setting['value'])) {
-                        // Set default smtp_password to env variable if not set
-                        $setting['value'] = getenv('EMAIL_SMTP_PASS') ? : '';
-                    } elseif ($key === 'smtp_username' && empty($setting['value'])) {
-                        // Set default smtp_username to env variable if not set
-                        $setting['value'] = getenv('EMAIL_SMTP_MAIL') ? : '';
-                    } else {
-                        $setting['value'] = $setting['default'] ?? null;
-                    }
+                    $setting['value'] = $this->getEmailKeyFromEnv($key, $setting);
+                }elseif ($section === 'sms') {
+                    $setting['value'] = $this->getSmsKeyFromEnv($key, $setting);
                 } else {
                     $setting['value'] = $setting['default'] ?? null;
                 }
-
-
             }
         }
 
@@ -145,6 +125,67 @@ class SettingsService extends BaseService
         ];
     }
 
+    /**
+     * @param string $setting_key
+     * @param array $setting
+     * @return string
+     */
+    private function getEmailKeyFromEnv(string $setting_key, array $setting): string
+    {
+        if ($setting_key === 'from_address' && empty($setting['value'])) {
+            // Set default from_address to system email from env if not set
+            $setting_value = getenv('EMAIL_SMTP_MAIL') ? : '';
+        } elseif ($setting_key === 'from_name' && empty($setting['value'])) {
+            // Set default from_name to app name from env if not set
+            $setting_value = getenv('EMAIL_SMTP_NAME') ? : 'My Application';
+        } elseif ($setting_key === 'smtp_port' && empty($setting['value'])) {
+            // Set default smtp_port to 587 if not set
+            $setting_value = getenv('EMAIL_SMTP_PORT') ? : 587;
+        } elseif ($setting_key === 'smtp_host' && empty($setting['value'])) {
+            // Set default smtp_host to localhost if not set
+            $setting_value = getenv('EMAIL_SMTP_HOST') ? : 'localhost';
+        } elseif ($setting_key === 'smtp_pass' && empty($setting['value'])) {
+            // Set default smtp_password to env variable if not set
+            $setting_value = getenv('EMAIL_SMTP_PASS') ? : '';
+        } elseif ($setting_key === 'smtp_username' && empty($setting['value'])) {
+            // Set default smtp_username to env variable if not set
+            $setting_value = getenv('EMAIL_SMTP_MAIL') ? : '';
+        } else {
+            $setting_value = $setting['default'] ?? null;
+        }
+
+        return $setting_value;
+    }
+
+    /**
+     * @param string $setting_key
+     * @param array $setting
+     * @return string
+     */
+    private function getSmsKeyFromEnv(string $setting_key, array $setting): string
+    {
+        if ($setting_key === 'api_key' && empty($setting['value'])) {
+            // Set default sms_api_key to env variable if not set
+            $setting_value = getenv('SMS_API_KEY') ? : '';
+        } elseif ($setting_key === 'partner_id' && empty($setting['value'])) {
+            // Set default sms_api_secret to env variable if not set
+            $setting_value = getenv('SMS_PARTNER_ID') ? : '';
+        } elseif ($setting_key === 'short_code' && empty($setting['value'])) {
+            // Set default sms_short_code to env variable if not set
+            $setting_value = getenv('SMS_SHORT_CODE') ? : '';
+        } elseif ($setting_key === 'pass_type' && empty($setting['value'])) {
+            // Set default sms_pass_type to env variable if not set
+            $setting_value = getenv('SMS_PASS_TYPE') ? : '';
+        } elseif ($setting_key === 'gateway_url' && empty($setting['value'])) {
+            // Set default sms_gateway_url to env variable if not set
+            $setting_value = getenv('SMS_GATEWAY_URL') ? : '';
+        } else {
+            $setting_value = $setting['default'] ?? null;
+        }
+
+        return $setting_value;
+    }
+
     public function saveSettings(string $section, array $settings, int $organization_id): array
     {
         $now = date('Y-m-d H:i:s');
@@ -171,11 +212,11 @@ class SettingsService extends BaseService
                     // Insert new setting
                     $this->db->table('general_settings')
                         ->insert([
-                            'setting_key'   => $key,
-                            'setting_value' => $value,
-                            'context'       => $section,
-                            'created_at'    => $now,
-                            'updated_at'    => $now,
+                            'setting_key'     => $key,
+                            'setting_value'   => $value,
+                            'context'         => $section,
+                            'created_at'      => $now,
+                            'updated_at'      => $now,
                             'organization_id' => $organization_id,
                         ]);
                 }
@@ -335,28 +376,113 @@ class SettingsService extends BaseService
         return null;
     }
 
-    public function getSetting(string $org_slug, string $setting_key): ?string
+    public function getSetting(string $org_slug, string $section, string $setting_key): ?string
     {
         $sql = "
             SELECT setting_value
-            FROM general_settings
-            WHERE context = :context:
-              AND setting_key = :setting_key:
-              AND deleted_at IS NULL
+            FROM general_settings gs
+            JOIN organizations o ON gs.organization_id = o.id
+            WHERE gs.context = :context:
+              AND gs.setting_key = :setting_key:
+              AND o.slug = :org_slug:
+              AND gs.deleted_at IS NULL
+              AND o.deleted_at IS NULL
             LIMIT 1
         ";
 
         $query = $this->db->query($sql, [
             'context'     => 'site',
             'setting_key' => $setting_key,
+            'org_slug'    => $org_slug,
         ]);
 
         $result = $query->getRowArray();
 
+        // We need to fall back to if no setting is found for the specified key
+        // If no values are found, return null
+        $sectionData = SettingsSchema::$structure[$section] ?? null;
+
         if ($result && !empty($result['setting_value'])) {
             return $result['setting_value'];
+        } elseif ($sectionData && isset($sectionData['value'][$setting_key]['default'])) {
+//            return $sectionData['value'][$setting_key]['default'];
+            // if the section is email or sms, we need to get the default from env
+            if ($section === 'email') {
+                return $this->getEmailKeyFromEnv($setting_key, $sectionData['value'][$setting_key]);
+            } elseif ($section === 'sms') {
+                return $this->getSmsKeyFromEnv($setting_key, $sectionData['value'][$setting_key]);
+            } else {
+                return $sectionData['value'][$setting_key]['default'];
+            }
         }
 
         return null;
+    }
+
+    public function getSettingsBySection(string $org_slug, string $section): array
+    {
+        $sql = "
+            SELECT setting_key, setting_value
+            FROM general_settings gs
+            JOIN organizations o ON gs.organization_id = o.id
+            WHERE gs.context = :context:
+              AND o.slug = :org_slug:
+              AND gs.deleted_at IS NULL
+              AND o.deleted_at IS NULL
+        ";
+
+        $query = $this->db->query($sql, [
+            'context'  => $section,
+            'org_slug' => $org_slug,
+        ]);
+
+        $results = $query->getResultArray();
+
+        $settings = [];
+
+        foreach ($results as $row) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+
+//        return $settings;
+        // Check and fall back to env values for email and sms sections
+        if ($section === 'email') {
+            if (empty($settings['from_address'] ?? '')) {
+                $settings['from_address'] = getenv('EMAIL_SMTP_MAIL') ? : '';
+            }
+            if (empty($settings['from_name'] ?? '')) {
+                $settings['from_name'] = getenv('EMAIL_SMTP_NAME') ? : 'My Application';
+            }
+            if (empty($settings['smtp_port'] ?? '')) {
+                $settings['smtp_port'] = getenv('EMAIL_SMTP_PORT') ? : 587;
+            }
+            if (empty($settings['smtp_host'] ?? '')) {
+                $settings['smtp_host'] = getenv('EMAIL_SMTP_HOST') ? : 'localhost';
+            }
+            if (empty($settings['smtp_pass'] ?? '')) {
+                $settings['smtp_pass'] = getenv('EMAIL_SMTP_PASS') ? : '';
+            }
+            if (empty($settings['smtp_username'] ?? '')) {
+                $settings['smtp_username'] = getenv('EMAIL_SMTP_MAIL') ? : '';
+            }
+        } elseif ($section === 'sms') {
+            if (empty($settings['api_key'] ?? '')) {
+                $settings['api_key'] = getenv('SMS_API_KEY') ? : '';
+            }
+            if (empty($settings['partner_id'] ?? '')) {
+                $settings['partner_id'] = getenv('SMS_PARTNER_ID') ? : '';
+            }
+            if (empty($settings['short_code'] ?? '')) {
+                $settings['short_code'] = getenv('SMS_SHORT_CODE') ? : '';
+            }
+            if (empty($settings['pass_type'] ?? '')) {
+                $settings['pass_type'] = getenv('SMS_PASS_TYPE') ? : '';
+            }
+            if (empty($settings['gateway_url'] ?? '')) {
+                $settings['gateway_url'] = getenv('SMS_GATEWAY_URL') ? : '';
+            }
+        }
+
+        return $settings;
     }
 }

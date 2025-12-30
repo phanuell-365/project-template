@@ -36,6 +36,7 @@ class TemplateService extends BaseService
             'auth.new_user'       => [
                 'user_name'         => 'John Doe',
                 'user_email'        => 'admin@acmecorp.com',
+                'user_phone'        => '+1-555-987-6543',
                 'login_link'        => 'https://myapp.com/login',
                 'company_name'      => 'Acme Corp',
                 'user_password'     => 'securepassword123',
@@ -153,38 +154,6 @@ class TemplateService extends BaseService
 
     public function saveTemplate(string $org_slug, string $slug, string $channel, string | null $subject, string $body): array
     {
-        // Check if template exists
-//        $existing = $this->db->table('notification_templates')
-//            ->where('slug', $slug)
-//            ->where('channel', $channel)
-//            ->where('organization_id', $organizationId)
-//            ->get()
-//            ->getRowArray();
-//
-//        if ($existing) {
-//            // Update existing template
-//            $this->db->table('notification_templates')
-//                ->where('id', $existing['id'])
-//                ->update([
-//                    'subject'    => $subject,
-//                    'body'       => $body,
-//                    'updated_at' => date('Y-m-d H:i:s'),
-//                ]);
-//        } else {
-//            // Insert new template
-//            $this->db->table('notification_templates')
-//                ->insert([
-//                    'slug'            => $slug,
-//                    'channel'         => $channel,
-//                    'organization_id' => $organizationId,
-//                    'subject'         => $subject,
-//                    'body'            => $body,
-//                    'created_at'      => date('Y-m-d H:i:s'),
-//                    'updated_at'      => date('Y-m-d H:i:s'),
-//                ]);
-//        }
-//
-//        return true;
 
         $sql = "
             SELECT id
@@ -272,7 +241,7 @@ class TemplateService extends BaseService
         if (!$template) {
             // Use default template from registry
             $template = [];
-            if ($channel == 'email') {
+            if ($channel == self::EMAIL_CHANNEL || $channel == self::RAW_EMAIL_CHANNEL) {
                 $template['subject'] = $def['email']['default_subject'] ?? '';
                 // Load body from view file
                 $template['body'] = view($def['email']['default_body_view']);
@@ -418,17 +387,17 @@ class TemplateService extends BaseService
                 // For email channels, we need to load the body from view files
                 $template = [];
 
-                if ($channel == 'email') {
+                if ($channel == self::EMAIL_CHANNEL || $channel == self::RAW_EMAIL_CHANNEL) {
                     $template['subject'] = $def['email']['default_subject'] ?? '';
                     // Load body from view file
                     $template['body'] = view($def['email']['default_body_view']);
                 } else {
-                    $template['body'] = $def['body'] ?? '';
+                    $template['body'] = $def['sms']['default_message'] ?? '';
                 }
             }
 
             // Add the email layout if channel is email
-            if ($channel == 'email') {
+            if ($channel == self::EMAIL_CHANNEL || $channel == self::RAW_EMAIL_CHANNEL) {
                 $emailLayout = view('emails/default', [
                     'content_body' => $template['body']
                 ]);
@@ -442,7 +411,10 @@ class TemplateService extends BaseService
             }
         }
 
-        $parsedSubject = $this->parseString($template['subject'], $data);
+        $parsedSubject =
+            $channel === self::EMAIL_CHANNEL || $channel == self::RAW_EMAIL_CHANNEL
+                ? $this->parseString($template['subject'], $data)
+                : null;
         $parsedBody = $this->parseString($template['body'], $data);
 
         return [

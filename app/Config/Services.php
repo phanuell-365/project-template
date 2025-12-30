@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Services\CommunicationService;
 use App\Services\GroupsService;
 use App\Services\PackagesService;
 use App\Services\PermissionsService;
@@ -88,5 +89,14 @@ class Services extends BaseService
         }
 
         return new TemplateService();
+    }
+
+    public static function communication_service($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('communication_service');
+        }
+
+        return new CommunicationService();
     }
 }
