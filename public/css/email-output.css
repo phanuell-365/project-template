@@ -503,12 +503,23 @@ img {
 
 .email-prose li {
   margin-bottom: 8px;
+  font-size: .65rem;
+  color: #374151;
+  /* text-gray-700 */
+  line-height: 1.6;
 }
 
 .email-prose a {
   --tw-text-opacity: 1;
   color: rgb(135 229 22 / var(--tw-text-opacity, 1));
   text-decoration: underline;
+}
+
+.email-prose strong {
+  color: #111827;
+  /* text-gray-900 */
+  font-size: .75rem;
+  font-weight: 600;
 }
 
 /* Montserrat Font Faces */

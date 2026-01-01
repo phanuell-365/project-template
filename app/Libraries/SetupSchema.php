@@ -465,6 +465,18 @@ class SetupSchema
             'slug'        => 'system.logs.communication',
             'order'       => 2,
         ],
+        // Action: View Communication Log Details (Not in Sidebar/Hidden)
+        [
+            'name'        => 'View Communication Log Details',
+            'description' => 'View details of individual communication logs',
+            'uri'         => '/system/logs/communication/details',
+            'is_parent'   => 0,
+            'context'     => 'admin',
+            'parent_slug' => 'system.logs',
+            'icon'        => null,
+            'slug'        => 'system.logs.communication.details',
+            'order'       => null,
+        ],
     ];
 
     public static array $groupsPermissionsStructure = [

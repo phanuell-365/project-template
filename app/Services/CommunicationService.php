@@ -6,6 +6,7 @@ use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Email\Email;
 use Config\Database;
 use Config\Services;
+use DateTime;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -366,5 +367,72 @@ class CommunicationService
                 'message' => 'An error occurred while adding to queue: ' . $e->getMessage(),
             ];
         }
+    }
+
+    public function getCommunicationLogs(array $filters = []): array
+    {
+        $builder = $this->db->table('notifications')
+//        ->join('organizations', 'notifications.organization_id = organizations.id', 'left');
+        ->join('organizations AS o', 'notifications.organization_id = o.id', 'left')
+        ->select('notifications.*, o.name AS organization_name, o.slug AS organization_slug');
+
+        if (isset($filters['organization_id'])) {
+            $builder->where('organization_id', $filters['organization_id']);
+        }
+
+        if (isset($filters['status'])) {
+            $builder->where('status', $filters['status']);
+        }
+
+        if (isset($filters['channel'])) {
+            $builder->where('channel', $filters['channel']);
+        }
+
+        if (isset($filters['date_from'])) {
+            // convert date from d/m/Y to Y-m-d
+            $date_from = DateTime::createFromFormat('d/m/Y', $filters['date_from'])->format('Y-m-d');
+//            $builder->where('DATE(notifications.created_at) >=', $filters['date_from']);
+            $builder->where('DATE(notifications.created_at) >=', $date_from);
+        }
+
+        if (isset($filters['date_to'])) {
+//            $builder->where('DATE(notifications.created_at) <=', $filters['date_to']);
+            // convert date from d/m/Y to Y-m-d
+            $date_to = DateTime::createFromFormat('d/m/Y', $filters['date_to'])->format('Y-m-d');
+            $builder->where('DATE(notifications.created_at) <=', $date_to);
+        }
+
+        return $builder->orderBy('created_at', 'DESC')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getCommunicationLogDetails(int $log_id): array
+    {
+//        $log = $this->db->table('notifications')
+//            ->join('organizations AS o', 'notifications.organization_id = o.id', 'left')
+//            ->select('notifications.*, o.name AS organization_name, o.slug AS organization_slug')
+//            ->where('notifications.id', $log_id)
+//            ->get()
+//            ->getRowArray();
+
+//        return $log ? : [];
+
+        // Include the organization details, user's details if any, etc.
+        $sql = "
+            SELECT n.*, 
+                   o.name AS organization_name, 
+                   o.slug AS organization_slug,
+                   o.contact_email AS organization_email,
+                   o.contact_phone AS organization_phone,
+                   o.address AS organization_address
+            FROM notifications n
+            LEFT JOIN organizations o ON n.organization_id = o.id
+            WHERE n.id = :log_id:
+        ";
+
+        $log = $this->db->query($sql, ['log_id' => $log_id])->getRowArray();
+
+        return $log ? : [];
     }
 }

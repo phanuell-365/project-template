@@ -322,6 +322,37 @@
             }
             e.stopPropagation();
         });
+
+
+        // Listen for the filter button click
+        $('#filter-<?= $id ?>-button').on('click', function () {
+            const startDate = $('#start_date').val();
+            const endDate = $('#end_date').val();
+
+            // Apply the date range filter to the DataTable
+            tableEl.DataTable().ajax.url(ajaxUrl + `?date_from=${startDate}&date_to=${endDate}`).load();
+        });
+
+        // Listen for the reset button click
+        $('#reset-<?= $id ?>-button').on('click', function () {
+            // Clear the date inputs
+            // $('#start_date').val('');
+            // $('#end_date').val('');
+            // Set the range to be between today and 2 days ago since that's the default filter
+            // We can use Luxon for date manipulation
+            // const DateTime = luxon.DateTime;
+            // const today = DateTime.now().toFormat('dd/MM/yyyy');
+            // const twoDaysAgo = DateTime.now().minus({days: 2}).toFormat('dd/MM/yyyy');
+            //
+            // $('#start_date').val(twoDaysAgo);
+            // $('#end_date').val(today);
+            //
+            // // Reset the DataTable ajax URL to the original
+            // tableEl.DataTable().ajax.url(ajaxUrl).load();
+
+            // Way too complicated, just reload the page
+            location.reload();
+        });
     })
 </script>
 
@@ -394,5 +425,124 @@
         });
 
         currentButton.addClass('btn btn-sm md:btn-md btn-primary join-item');
+
+        const rangePicker = $('#range-picker');
+        new DateRangePicker(rangePicker[0], {
+            format: 'dd/mm/yyyy',
+        });
+
     })
+</script>
+
+
+<script>
+    // 2. Create a shadow root and attach Flowbite inside it
+    //const container = document.getElementById('flowbite-datepicker-container');
+    //const shadow = container.attachShadow({mode: 'open'});
+    //
+    //// Add our tailwind CSS to the shadow DOM as well
+    //const tailwindLink = document.createElement('link');
+    //tailwindLink.rel = 'stylesheet';
+    //tailwindLink.href = <?php //= "'" . base_url('css/tailwind.css') . "'"; ?>//;
+    //shadow.appendChild(tailwindLink);
+    //
+    //const flowbiteMinScript = document.createElement('script');
+    //// script.src = 'https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js';
+    //flowbiteMinScript.src = <?php //= "'" . base_url('js/flowbite.min.js') . "'"; ?>//;
+    //shadow.appendChild(flowbiteMinScript);
+    //
+    //// Add the date range picker script
+    //const datePickerScript = document.createElement('script');
+    //// rangeScript.src = 'https://cdn.jsdelivr.net/npm/flowbite-datepicker@1.3.4/dist/datepicker.min.js';
+    //datePickerScript.src = <?php //= "'" . base_url('js/datepicker.js') . "'"; ?>//;
+    //shadow.appendChild(datePickerScript);
+
+    // const dateRangePickerScript = document.createElement('script');
+    // rangeScript.src = 'https://cdn.jsdelivr.net/npm/flowbite-datepicker@1.3.4/dist/datepicker.min.js';
+    //dateRangePickerScript.src = <?php //= "'" . base_url('js/datepicker-range-range.js') . "'"; ?>//;
+    // shadow.appendChild(dateRangePickerScript);
+
+    //const datePickerFullScript = document.createElement('script');
+    //// rangeScript.src = 'https://cdn.jsdelivr.net/npm/flowbite-datepicker@1.3.4/dist/datepicker-full.min.js';
+    //datePickerFullScript.src = <?php //= "'" . base_url('js/datepicker-full.js') . "'"; ?>//;
+    //shadow.appendChild(datePickerFullScript);
+
+    <!--    --><?php
+    //    $today = date('d/m/Y');
+    //
+    //    $start_date_input = view('components/form-date-picker', [
+    //            'props' => [
+    //                    'id'                  => 'start_date',
+    //                    'label'               => 'Start Date',
+    //                    'name'                => 'start_date',
+    //                    'type'                => 'start_date',
+    //                    'value'               => $today,
+    //                    'datepicker'          => false,
+    //                    'datepicker-autohide' => false,
+    //                    'datepicker-title'    => 'Start Date',
+    //                    'has-range'           => true,
+    //            ]
+    //    ]);
+    //
+    //    $end_date_input = view('components/form-date-picker', [
+    //            'props' => [
+    //                    'id'                  => 'end_date',
+    //                    'label'               => 'End Date',
+    //                    'name'                => 'end_date',
+    //                    'type'                => 'end_date',
+    //                    'value'               => $today,
+    //                    'datepicker'          => false,
+    //                    'datepicker-autohide' => false,
+    //                    'datepicker-title'    => 'End Date',
+    //                    'has-range'           => true,
+    //            ]
+    //    ]);
+    //    ?>
+
+    // 4. Once JS loads, add the datepicker HTML to the shadow DOM
+    // flowbiteMinScript.onload = function () {
+    //       const datepickerHTML = `
+    //   <div class="relative max-w-sm">
+    //     <input datepicker type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Select date">
+    //   </div>
+    // `;
+
+    // const datepickerHTML = `
+    //     <div class="grid grid-cols-1 md:grid-cols-2 gap-4"  id="range-picker" date-rangepicker>
+    //                    <?php //= str_replace("\n", '', $start_date_input) ?>
+    //                    <?php //= str_replace("\n", '', $end_date_input) ?>
+    //             </div>
+    //         `;
+
+    //     shadow.innerHTML += datepickerHTML;
+    //     // Re-initialize components within the shadow root
+    //     if (window.initFlowbite) {
+    //         window.initFlowbite();
+    //
+    //         console.debug('Flowbite datepicker initialized in shadow DOM');
+    //
+    //         const startDate = $('#start_date', shadow);
+    //         const endDate = $('#end_date', shadow);
+    //
+    //         new Datepicker(startDate[0], {
+    //             format: 'dd/mm/yyyy',
+    //             autohide: true,
+    //             todayHighlight: true,
+    //         });
+    //
+    //         new Datepicker(endDate[0], {
+    //             format: 'dd/mm/yyyy',
+    //             autohide: true,
+    //             todayHighlight: true,
+    //         });
+    //
+    //     }
+    // };
+    //
+    // datePickerFullScript.onload = function () {
+    //     const rangePicker = $('#range-picker', shadow);
+    //     new DateRangePicker(rangePicker[0], {
+    //         format: 'dd/mm/yyyy',
+    //     });
+    // }
 </script>

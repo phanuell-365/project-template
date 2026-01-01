@@ -313,13 +313,13 @@ class TemplateService extends BaseService
 
     public function renderTemplate(string $slug, string $channel, int $organizationId, array $data = [], string | null $new_template = null): array
     {
-        // Fetch the template from the database
-//        $template = $this->db->table('notification_templates')
-//            ->where('slug', $slug)
-//            ->where('channel', $channel)
-//            ->where('organization_id', $organizationId)
-//            ->get()
-//            ->getRowArray();
+        $def = TemplateRegistry::$definitions[$slug] ?? null;
+        if (!$def) {
+            return [
+                'success' => false,
+                'message' => 'Template not found in database or registry.'
+            ];
+        }
 
         if ($new_template) {
             // Add the email layout if channel is email
@@ -374,14 +374,6 @@ class TemplateService extends BaseService
             ]);
 
             if (!$template) {
-                $def = TemplateRegistry::$definitions[$slug] ?? null;
-                if (!$def) {
-                    return [
-                        'success' => false,
-                        'message' => 'Template not found in database or registry.'
-                    ];
-                }
-
                 // Use default template from registry
                 // We'll get the default templates from the registry
                 // For email channels, we need to load the body from view files
@@ -415,6 +407,12 @@ class TemplateService extends BaseService
             $channel === self::EMAIL_CHANNEL || $channel == self::RAW_EMAIL_CHANNEL
                 ? $this->parseString($template['subject'], $data)
                 : null;
+        // Add subject and description to data
+        $data['subject'] = $parsedSubject;
+//        $data['description'] = $template['description'] ?? '';
+        // Get description from $def
+        $data['description'] = $def[$channel]['description'] ?? '';
+
         $parsedBody = $this->parseString($template['body'], $data);
 
         return [

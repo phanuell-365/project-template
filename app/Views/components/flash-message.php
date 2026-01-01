@@ -15,7 +15,6 @@
 // When retrieving flash data, use:
 
 $flash_data = session()->getFlashdata('flash_message');
-
 if ($flash_data) :
     $type = $flash_data['type'] ?? 'info';
     $popup_style = $flash_data['popup_style'] ?? 'banner';
@@ -82,7 +81,7 @@ if ($flash_data) :
             </p>
         </div>
         <div class="flex items-center">
-            <button data-dismiss-target="#flash-banner" type="button"
+            <button id="flash-banner-btn" data-dismiss-target="#flash-banner" type="button"
                     class="flex-shrink-0 inline-flex justify-center items-center
                         <?= $type === 'success' ? 'text-green-400 hover:bg-green-200 hover:text-green-900' : '' ?>
                         <?= $type === 'error' ? 'text-red-400 hover:bg-red-200 hover:text-red-900' : '' ?>
@@ -102,54 +101,31 @@ if ($flash_data) :
 <?php endif; ?>
 
     <script>
-        // Auto-dismiss the banner after 5 seconds
-        // setTimeout(() => {
-        //     const banner = document.getElementById('flash-banner');
-        //     if (banner) {
-        //         banner.remove();
-        //     }
-        // }, 5000);
+        <?php if ($popup_style === 'banner') : ?>
+        $(document).ready(function () {
+            <?php if ($auto_dismiss) : ?>
+            setTimeout(function () {
+                $('#flash-banner').fadeOut('slow', function () {
+                    $(this).remove();
+                });
+            }, <?= $duration * 1000 ?>);
+            <?php else :?>
+            // Listener for the close button
+            $('#flash-banner-btn').on('click', function () {
+                $('#flash-banner').fadeOut('slow', function () {
+                    $(this).remove();
+                });
+            });
+            <?php endif; ?>
+        });
 
-        <?php if ($popup_style === 'banner' && $auto_dismiss) : ?>
-        setTimeout(() => {
-            const banner = document.getElementById('flash-banner');
-            if (banner) {
-                banner.remove();
-            }
-        }, <?= $duration * 1000 ?>);
         <?php endif; ?>
 
     </script>
 
     <script type="module">
-        // We're going to use Swal.fire for modal popups
         <?php if ($popup_style === 'modal') : ?>
 
-        //import {ShowNotification} from '<?php //= base_url('js/new.swal.js') ?>//';
-
-        // async function ShowNotification(options) {
-        //     return Swal.fire({
-        //         ...options,
-        //         customClass: {
-        //             popup: 'relative mx-auto flex flex-col w-11/12 sm:w-[480px] h-auto bg-soko-100 rounded-[28px]',
-        //             htmlContainer: '!flex flex-col gap-4 justify-start !px-8 !pt-8 !pb-0 !text-sm tracking-[0.25px] leading-5 !text-start',
-        //             title: 'text-title-lg text-gray-900 !text-start !px-8',
-        //             confirmButton: 'btn btn-primary relative flex flex-row items-center justify-center gap-x-2 py-2.5 px-6 rounded-[6.25rem] text-sm tracking-[.00714em] font-medium hover:bg-primary-dark focus:bg-primary-dark',
-        //             cancelButton: 'btn btn-secondary relative flex flex-row items-center justify-center gap-x-2 py-2.5 px-6 rounded-[6.25rem] text-sm tracking-[.00714em] font-medium hover:bg-secondary-dark focus:bg-secondary-dark',
-        //             actions: 'flex flex-row justify-end gap-2 px-8 py-8 w-full',
-        //             ...options.customClass,
-        //         },
-        //         buttonsStyling: false, // Disable default styling
-        //         backdrop: 'backdrop-blur bg-opacity-90',
-        //         // width
-        //         allowOutsideClick: true,
-        //         allowEscapeKey: false,
-        //         focusConfirm: true,
-        //         reverseButtons: true,
-        //     });
-        // }
-
-        // Swal.fire({
         ShowNotification({
             icon: '<?= $type ?>',
             title: '<?= esc($title) ?>',

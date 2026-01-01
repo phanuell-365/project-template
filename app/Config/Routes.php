@@ -52,6 +52,13 @@ $routes->group('(:segment)', ['namespace' => 'App\Controllers'], function ($rout
             $routes->post('permissions', 'GroupsSettingsController::updatePermissions', ['as' => 'update-group-permissions']);
             $routes->get('permissions', 'GroupsSettingsController::getPermissions', ['as' => 'get-group-permissions']);
         });
+
+        $routes->group('logs', ['namespace' => 'App\Controllers'], function ($routes) {
+            $routes->get('audit', 'LogsController::auditLogsView', ['as' => 'audit-logs-view']);
+            $routes->get('system', 'LogsController::systemLogsView', ['as' => 'system-logs-view']);
+            $routes->get('communication', 'CommunicationLogsController::communicationLogsView', ['as' => 'communication-logs-view']);
+            $routes->get('communication/details', 'CommunicationLogsController::communicationLogDetailsView', ['as' => 'communication-log-details-view']);
+        });
     });
 
     $routes->group('organisation', ['namespace' => 'App\Controllers'], function ($routes) {

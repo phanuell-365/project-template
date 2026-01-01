@@ -92,6 +92,7 @@ class UserController extends BaseController
             flash_message('User Created', 'The user has been created successfully.', 'success');
 
             return redirect()
+                ->withInput()
                 ->to(route_to('users', $this->org_slug));
 
         } catch (Exception $e) {

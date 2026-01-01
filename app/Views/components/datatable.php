@@ -2,10 +2,68 @@
 /**
  * @var string $id
  * @var array $attributes
+ * @var bool $datepicker
+ * @var array|null $date_filters
  */
+
+$today = date('d/m/Y');
+
+$start_date_input = view('components/form-date-picker', [
+        'props' => [
+                'id'                  => 'start_date',
+                'label'               => 'Start Date',
+                'name'                => 'start_date',
+                'type'                => 'start_date',
+                //                'value'               => $today,
+                'value'               => $date_filters['date_from'] ?? $today,
+                'datepicker'          => false,
+                'datepicker-autohide' => false,
+                'datepicker-title'    => 'Start Date',
+                'has-range'           => true,
+        ]
+]);
+
+$end_date_input = view('components/form-date-picker', [
+        'props' => [
+                'id'                  => 'end_date',
+                'label'               => 'End Date',
+                'name'                => 'end_date',
+                'type'                => 'end_date',
+//                'value'               => $today,
+                'value'               => $date_filters['date_to'] ?? $today,
+                'datepicker'          => false,
+                'datepicker-autohide' => false,
+                'datepicker-title'    => 'End Date',
+                'has-range'           => true,
+        ]
+]);
+
+
 ?>
 
 <div class="grid grid-cols-1 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="range-picker" date-rangepicker>
+            <?= $start_date_input ?>
+            <?= $end_date_input ?>
+        </div>
+
+        <div class="flex items-end justify-end space-x-2">
+            <button id="filter-<?= $id ?>-button" class="btn btn-sm btn-primary" type="button">
+                <span class="material-symbols-rounded">
+                    filter_list
+                </span>
+                <span>Filter</span>
+            </button>
+            <button id="reset-<?= $id ?>-button" class="btn btn-sm btn-secondary" type="button">
+                <span class="material-symbols-rounded">
+                    refresh
+                </span>
+                <span>Reset</span>
+            </button>
+        </div>
+    </div>
+
     <table id="<?= $id ?>" class="<?= $id ?>-list table">
         <thead>
         <tr>

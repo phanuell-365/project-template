@@ -109,5 +109,6 @@ module.exports = {
         require('@tailwindcss/forms'),
         require('tailwind-scrollbar'),
     ],
+    darkMode: 'selector',
 }
 

@@ -14,3 +14,5 @@
 <script src="https://cdn.datatables.net/select/1.6.2/js/dataTables.select.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/luxon@3.7.2/build/global/luxon.min.js"></script>
 
+<?php //= script_tag(base_url('js/flowbite.min.js')) ?>
+<?= script_tag(base_url('js/datepicker-full.js')) ?>

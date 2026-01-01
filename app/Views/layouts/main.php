@@ -102,16 +102,22 @@ if (!empty($sidebar_tree)) {
 ?>
 
 <!doctype html>
-<html lang="en" class="font-montserrat bg-light h-screen">
+<html lang="en" class="font-montserrat bg-light h-screen" data-theme="soko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="color-scheme" content="light">
+    <meta name="application-name" content="<?= esc($site_name) ?>">
+    <meta name="author" content="Soko Tech">
+    <meta name="description" content="Soko Tech Inventory Management System">
+    <meta name="keywords" content="inventory, management, system, sokotech, php, codeigniter, mysql">
+    <meta name="theme-color" content="#0ea5e9">
 
     <?= $this->renderSection('meta') ?>
 
-<!--    <link rel="icon" href="--><?php //= base_url('img/favicon/favicon.ico') ?><!--" type="image/x-icon">-->
+    <!--    <link rel="icon" href="--><?php //= base_url('img/favicon/favicon.ico') ?><!--" type="image/x-icon">-->
     <link rel="icon" href="<?= $site_favicon ?>" type="image/x-icon">
     <link rel="stylesheet" href="<?= base_url('css/tailwind.css') ?>?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= base_url('css/sweetalert2.min.css') ?>?v=<?= time() ?>">
@@ -128,7 +134,9 @@ if (!empty($sidebar_tree)) {
 
     <?= $this->renderSection('scripts') ?>
 
-    <title><?= $this->renderSection('title') ?></title>
+    <title>
+        <?= session()->get('current_permission')['name'] ?? 'Dashboard' ?>
+    </title>
 </head>
 
 <body class="bg-gradient-to-b from-white to-soko-200">
@@ -138,7 +146,8 @@ if (!empty($sidebar_tree)) {
            tabindex="-1" aria-labelledby="drawer-navigation-label">
         <!-- Logo Section -->
         <div class="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/80 px-6 py-5 z-10">
-<!--            <img src="--><?php //= base_url('img/app-logo.png') ?><!--" alt="app-logo" class="h-9 w-auto"/>-->
+            <!--            <img src="-->
+            <?php //= base_url('img/app-logo.png') ?><!--" alt="app-logo" class="h-9 w-auto"/>-->
             <img src="<?= $site_logo ?>" alt="site-logo" class="h-9 w-auto mx-auto"/>
         </div>
         <div id="drawer-navigation" class="py-6">
@@ -164,7 +173,7 @@ if (!empty($sidebar_tree)) {
                     <!-- Center: Page title or breadcrumb (optional) -->
                     <div class="hidden md:flex items-center flex-1 ml-4">
                         <h1 class="text-lg font-semibold text-gray-800">
-<!--                            --><?php //= $this->renderSection('page-title') ?>
+                            <!--                            --><?php //= $this->renderSection('page-title') ?>
                             <?= session()->get('current_permission')['name'] ?? 'Dashboard' ?>
                         </h1>
                     </div>
@@ -232,7 +241,7 @@ if (!empty($sidebar_tree)) {
 </main>
 
 <script type="module" src="<?= base_url('js/anime.esm.min.js') ?>"></script>
-<script src="<?= base_url('js/flowbite.min.js') ?>"></script>
+<!--<script src="--><?php //= base_url('js/flowbite.min.js') ?><!--"></script>-->
 
 <?= $this->renderSection('bottom-scripts') ?>
 </body>

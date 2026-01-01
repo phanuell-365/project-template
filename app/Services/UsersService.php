@@ -118,10 +118,12 @@ class UsersService extends BaseService
                 'user_name'         => $data['full_name'],
                 'user_email'        => $data['email'],
                 'user_phone'        => $data['phone'] ?? 'N/A',
-                'user_password'     => $user_password,
-                'company_name'      => $organization['name'],
                 'login_link'        => base_url(route_to('login-view', $organization['slug'])),
-                'registration_date' => date('Y-m-d H:i:s'),
+                'company_name'      => $organization['name'],
+                'user_password'     => $user_password,
+//                'registration_date' => date('Y-m-d H:i:s'),
+                // Format the date in a more user-friendly way
+                'registration_date' => date('F j, Y, g:i a'),
             ],
             $organization['id'],
             'high'

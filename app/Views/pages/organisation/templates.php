@@ -17,7 +17,7 @@ $this->extend('layouts/main');
 
 <?php $this->section('content'); ?>
 <?= view('components/datatable', [
-    'id' => 'companies-table',
+    'id' => 'templates-table',
     'attributes' => $attributes
 ]) ?>
 <?= $this->endSection() ?>
@@ -127,10 +127,10 @@ $this->extend('layouts/main');
     </script>
 
 <?= view('components/datatable_script', [
-    'id' => 'companies-table',
+    'id' => 'templates-table',
     'attributes' => $attributes,
     'ajax_url' => route_to('get-communication-templates', $org_slug),
-    'name' => 'companies',
+    'name' => 'templates',
 ]) ?>
 
 <?= $this->endSection() ?>

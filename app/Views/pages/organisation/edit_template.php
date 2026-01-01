@@ -178,7 +178,7 @@ Edit Template - <?= esc($org_name ?? 'Organization') ?>
         <h2 class="text-xl font-bold text-gray-900 mb-4">
             Email Template Preview
         </h2>
-        <iframe id="email-preview-iframe" class="w-full h-96 border border-gray-300 rounded-lg"
+        <iframe id="email-preview-iframe" class="w-full h-[100dvh] border border-gray-300 rounded-lg"
                 srcdoc="<?= esc($template['body']) ?>">
         </iframe>
     </div>

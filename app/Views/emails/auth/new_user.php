@@ -1,10 +1,7 @@
 <p>Hi {{user_name}},</p>
-
 <p>An account has been created for you at <strong>{{company_name}}</strong> on <strong>{{registration_date}}</strong>.
 </p>
-
 <p>You can sign in using the following details:</p>
-
 <ul style="padding-left:18px;">
     <li><strong>Email:</strong> {{user_email}}</li>
     <li><strong>Temporary password:</strong> {{user_password}}</li>
